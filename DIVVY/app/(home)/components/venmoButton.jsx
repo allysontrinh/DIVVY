@@ -4,7 +4,7 @@ import { Linking } from "react-native";
 
 const LaunchVenmo = () => {
   const openVenmo = () => {
-    const venmoUrl = "venmo://x-callback-url/open"; // https://venmo.com
+    const venmoUrl = "https://venmo.com"; // venmo://x-callback-url/open
     Linking.openURL(venmoUrl).catch(() => {
       alert("Venmo app not installed or URL not supported");
     });
