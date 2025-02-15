@@ -1,20 +1,12 @@
-import { Text, View } from "react-native";
+import React from "react";
+import { View } from "react-native";
+import LaunchVenmo from "@/components/venmoButton"; // Ensure path is correct
 
-/**
- * Home page of Divvy.
- * Matching Path: /
- * @returns 
- */
-
-export default function HomePage() {
+export default function HomeScreen() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <LaunchVenmo />
     </View>
   );
 }
+

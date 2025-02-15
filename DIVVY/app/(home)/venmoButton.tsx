@@ -1,20 +1,22 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { IoLogoVenmo } from "react-icons/io5";
+import { View, Button } from "react-native";
+import { Linking } from "react-native";
 
 const LaunchVenmo = () => {
   const openVenmo = () => {
-    const venmoUrl = "https://venmo.com"; // Add more if needed
-    window.open(venmoUrl, "_blank");
+    const venmoUrl = "venmo://x-callback-url/open"; // https://venmo.com
+    Linking.openURL(venmoUrl).catch(() => {
+      alert("Venmo app not installed or URL not supported");
+    });
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Button onClick={openVenmo} className="flex items-center gap-2 p-4 text-white bg-green-500 hover:bg-green-600">
-        <IoLogoVenmo size={24} /> Launch Venmo
-      </Button>
-    </div>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Button title="Launch Venmo" onPress={openVenmo} color="#3D95CE" />
+    </View>
   );
 };
 
-export default LaunchVenmo;
+export default function HomePage() {
+  return <LaunchVenmo />;
+}

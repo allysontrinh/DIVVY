@@ -1,13 +1,10 @@
-import { Tabs } from 'expo-router';
+import { Tabs } from "expo-router";
 
-/**
- * Handles layout of index and profile
- * @returns 
- */
 export default function HomeLayout() {
   return (
     <Tabs screenOptions={{ headerShown: false }}>
-      <Tabs.Screen name="(home)"/>
+      <Tabs.Screen name="index" options={{ title: "Home" }} />
+      <Tabs.Screen name="profile" options={{ title: "Profile" }} />
     </Tabs>
   );
 }
