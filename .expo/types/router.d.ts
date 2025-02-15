@@ -1,0 +1,14 @@
+/* eslint-disable */
+import * as Router from 'expo-router';
+
+export * from 'expo-router';
+
+declare module 'expo-router' {
+  export namespace ExpoRouter {
+    export interface __routes<T extends string | object = string> {
+      hrefInputParams: { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(home)'}` | `/`; params?: Router.UnknownInputParams; } | { pathname: `${'/(home)'}/components/venmoButton` | `/components/venmoButton`; params?: Router.UnknownInputParams; } | { pathname: `${'/(home)'}/profile` | `/profile`; params?: Router.UnknownInputParams; };
+      hrefOutputParams: { pathname: Router.RelativePathString, params?: Router.UnknownOutputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownOutputParams } | { pathname: `/_sitemap`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(home)'}` | `/`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(home)'}/components/venmoButton` | `/components/venmoButton`; params?: Router.UnknownOutputParams; } | { pathname: `${'/(home)'}/profile` | `/profile`; params?: Router.UnknownOutputParams; };
+      href: Router.RelativePathString | Router.ExternalPathString | `/_sitemap${`?${string}` | `#${string}` | ''}` | `${'/(home)'}${`?${string}` | `#${string}` | ''}` | `/${`?${string}` | `#${string}` | ''}` | `${'/(home)'}/components/venmoButton${`?${string}` | `#${string}` | ''}` | `/components/venmoButton${`?${string}` | `#${string}` | ''}` | `${'/(home)'}/profile${`?${string}` | `#${string}` | ''}` | `/profile${`?${string}` | `#${string}` | ''}` | { pathname: Router.RelativePathString, params?: Router.UnknownInputParams } | { pathname: Router.ExternalPathString, params?: Router.UnknownInputParams } | { pathname: `/_sitemap`; params?: Router.UnknownInputParams; } | { pathname: `${'/(home)'}` | `/`; params?: Router.UnknownInputParams; } | { pathname: `${'/(home)'}/components/venmoButton` | `/components/venmoButton`; params?: Router.UnknownInputParams; } | { pathname: `${'/(home)'}/profile` | `/profile`; params?: Router.UnknownInputParams; };
+    }
+  }
+}
