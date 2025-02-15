@@ -10,6 +10,11 @@ import {
   Image,
 } from "react-native";
 
+/**
+ * 
+ * @returns Component that displays camera app/sends receipt to receipt.jsx screen
+ */
+
 export default function CameraScreen() {
   const [permission, requestPermission] = useCameraPermissions();
   const [photo, setPhoto] = useState(null);
