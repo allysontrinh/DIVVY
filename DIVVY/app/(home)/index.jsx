@@ -43,7 +43,7 @@ export default function HomeScreen() {
           <ScrollView style={styles.scrollView}>
             {friends.map((friend, index) => (
               <Card key={index}>
-                <Card.Title>{friend.name}</Card.Title>
+                <Card.Title style={styles.nameText}>{friend.name}</Card.Title>
                 <Card.Divider />
                 <Text>Spent: $100</Text>
               </Card>
@@ -61,6 +61,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.primary,
+    flex: 1,
   },
   searchBarWrapper: {
     width: "90%",
@@ -72,13 +73,16 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     padding: 40,
     marginTop: 10,
-    marginBottom: -10,
+    marginBottom: 10,
     border: "none",
   },
   searchBarInput: {
     borderRadius: 30,
     marginBottom: -20,
     backgroundColor: "white",
+  },
+  nameText: {
+    textAlign: "left",
   },
   view1: {
     flex: 1,
@@ -105,7 +109,8 @@ const styles = StyleSheet.create({
     margin: 40,
   },
   scrollView: {
-    flex: 1,
+    flex: 1, 
+    marginBottom: 100,
   },
   loader: {
     flex: 1,
