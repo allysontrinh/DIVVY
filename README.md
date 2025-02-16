@@ -91,6 +91,10 @@ The API will be available at: `http://localhost:PORT`
 #### `GET /api/tickets`
 - Retrieves a list of all tickets.
 - **Response:** A JSON array containing all tickets.
+  
+#### `GET /api/tickets/ticketID/:ticketID`
+- Retrieves a single ticket by its `ticketID`.
+- **Response:** A JSON object containing the ticket details.
 
 #### `PUT /api/tickets/:ticketID`
 - Updates a ticket’s details by it's `ticketID`.
@@ -110,10 +114,12 @@ The API will be available at: `http://localhost:PORT`
   ```
 - **Response:** The created ticket object.
 
-#### `GET /api/tickets/ticketID/:ticketID`
-- Retrieves a single ticket by its `ticketID`.
-- **Response:** A JSON object containing the ticket details.
-
+#### `DELETE /api/tickets/:ticketID`
+- Deletes a ticket by it's `ticketID`.
+- **Response:**  
+  ```json
+  { "message": "Ticket deleted" }
+  ```
 ---
 
 ### **Receipt Endpoints**
@@ -122,6 +128,10 @@ The API will be available at: `http://localhost:PORT`
 - Retrieves a list of all receipts.
 - **Response:** A JSON array containing all receipts.
 
+#### `GET /api/receipts/receiptID/:receiptID`
+- Retrieves a single receipt by its `receiptID`.
+- **Response:** A JSON object containing the receipt details.
+  
 #### `PUT /api/receipts/:receiptID`
 - Updates a receipts’s details by it's `receiptID`.
 - **Response:** The updated receipt object.
@@ -148,10 +158,13 @@ The API will be available at: `http://localhost:PORT`
   ```
 - **Response:** The created receipt object.
 
-#### `GET /api/receipts/receiptID/:receiptID`
-- Retrieves a single receipt by its `receiptID`.
-- **Response:** A JSON object containing the receipt details.
-
+#### `DELETE /api/users/:receiptID`
+- Deletes a receipt by it's `receiptID`.
+- **Response:**  
+  ```json
+  { "message": "Receipt deleted" }
+  ```
+  
 ---
 
 ## 🔗 Deployment
