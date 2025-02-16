@@ -1,51 +1,50 @@
-/* Opens up device camera, allows users to retake image, and sends photo to Veryfi API and returns a JSON.
- * JSON is parsed for "important" data, and that parsed JSON gets sent to receipt.jsx to be displayed in a new screen.
-*/
+import React, { useState } from "react";
+import { Button, View, Text, Image } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import axios from "axios";
+import NewReceipt from "./newReceipt"; // Import NewReceipt component
+import { useRouter } from "expo-router";
 
-
-import React, { useState } from 'react';
-import { Button, View, Text, Image, ScrollView } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
-import axios from 'axios';
-import { useRouter } from 'expo-router';
-
-// Client setup 
-// Keep these keys 
-const VERYFI_API_URL = 'https://api.veryfi.com/api/v8/partner/documents/';
-const CLIENT_ID = 'vrf04ztm0OPFKx0YhynfzpSKk5pPuXks5bh87oX';
-const CLIENT_SECRET = 'T0NelIyfjahP6MVVMILX8S2FPYL6gtfRnXDhV0l9PiLBUyo9Fijti2C1HFcGCTFUvi8HT0fgJJMJBboL70PmFiCeY5JGXl9KbHv6KkCT4AUGnaojWwBPldzDLOHc7pkn';
-const API_KEY = '04261745d020eb0b2f389479dba4ba0b';
+// Veryfi API Credentials
+const VERYFI_API_URL = "https://api.veryfi.com/api/v8/partner/documents/";
+const CLIENT_ID = "vrf04ztm0OPFKx0YhynfzpSKk5pPuXks5bh87oX";
+const CLIENT_SECRET =
+  "T0NelIyfjahP6MVVMILX8S2FPYL6gtfRnXDhV0l9PiLBUyo9Fijti2C1HFcGCTFUvi8HT0fgJJMJBboL70PmFiCeY5JGXl9KbHv6KkCT4AUGnaojWwBPldzDLOHc7pkn";
+const API_KEY = "04261745d020eb0b2f389479dba4ba0b";
 
 export default function Camera() {
   const [image, setImage] = useState(null);
   const [savedImageUri, setSavedImageUri] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [veryfiResponse, setVeryfiResponse] = useState(null);
   const router = useRouter();
 
-  /***********************  camera + image handling *************************************************************/
+  /***********************  Camera + Image Handling  *************************************************************/
   const pickImage = async () => {
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [4, 3], // Should probably change aspect ratio to not 4x3
+      aspect: [4, 3],
       quality: 1,
     });
 
     if (!result.canceled) {
-      const imageUri = result.assets[0].uri; 
-      setImage(imageUri); // Display the image
+      const imageUri = result.assets[0].uri;
+      setImage(imageUri);
 
       const savedUri = await saveImage(imageUri);
       setSavedImageUri(savedUri);
 
       // After saving, send the image to Veryfi
       await sendToVeryfi(savedUri);
+    } else {
+      router.push("/");
     }
   };
 
   const saveImage = async (imageUri) => {
     try {
-      const filename = imageUri.split('/').pop();
+      const filename = imageUri.split("/").pop();
       const destination = `${FileSystem.documentDirectory}${filename}`;
 
       await FileSystem.moveAsync({
@@ -53,63 +52,63 @@ export default function Camera() {
         to: destination,
       });
 
-      console.log('Image saved to:', destination);
+      console.log("Image saved to:", destination);
       return destination;
     } catch (error) {
-      console.error('Error saving image:', error);
+      console.error("Error saving image:", error);
     }
   };
 
-  /********************************************** Veryfi API handling ******************************************************/
+  /********************************************** Veryfi API Handling ******************************************************/
   const sendToVeryfi = async (imageUri) => {
     try {
-        const fileBase64 = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+      const fileBase64 = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
 
-        const filename = imageUri.split('/').pop(); // Extract filename safely
+      const filename = imageUri.split("/").pop();
 
-        const response = await axios.post(
-            VERYFI_API_URL,
-            {
-                file_data: fileBase64,
-                file_name: filename, // Use filename extracted from imageUri
-                categories: ['Grocery', 'Restaurant'],
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    // Client-Id and Authorization keys (keep these)
-                    'Client-Id': 'vrf04ztm0OPFKx0YhynfzpSKk5pPuXks5bh87oX',
-                    'Authorization': `apikey allysontrinh:04261745d020eb0b2f389479dba4ba0b`,
-                },
-            }
-        );
-
-        console.log('Veryfi Response:', response.data);
-        setVeryfiResponse(response.data);
-        
-        // Navigate to the receipt screen and pass the parsed data
-        router.replace({
-          pathname: '/receipt',
-          query: {
-            vendor_name: response.data.vendor_name || 'N/A',
-            total: response.data.total || 'N/A',
-            date: response.data.transaction_date || 'N/A',
-            tax: response.data.tax || 'N/A',
-            categories: response.data.categories ? response.data.categories.join(', ') : 'N/A',
-          }
-        });
-
+      const response = await axios.post(
+        VERYFI_API_URL,
+        {
+          file_data: fileBase64,
+          file_name: filename,
+          categories: ["Grocery", "Restaurant"],
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Client-Id": CLIENT_ID,
+            Authorization: `apikey allysontrinh:${API_KEY}`,
+          },
+        }
+      );
+      setVeryfiResponse(response.data);
     } catch (error) {
-      console.error('Error sending to Veryfi:', error.response ? error.response.data : error.message);
+      console.error(
+        "Error sending to Veryfi:",
+        error.response ? error.response.data : error.message
+      );
+    } finally {
+      setLoading(false);
+      setCancelled(false);
     }
   };
 
+  // If veryfiResponse exists, navigate to NewReceipt and pass the data
+  if (veryfiResponse) {
+    return <NewReceipt veryfiData={veryfiResponse} />;
+  }
+
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Button title="Take a Photo" onPress={pickImage} />
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, marginTop: 10 }} />}
-      {savedImageUri && <Text>Saved at: {savedImageUri}</Text>}
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      {/* Show loading indicator while API call is in progress */}
+      {loading ? (
+        <ActivityIndicator size="large" color="#3498db" />
+      ) : (
+        pickImage()
+      )}
     </View>
   );
 }
