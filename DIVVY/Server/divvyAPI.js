@@ -108,17 +108,18 @@ app.get("/api/users/userID/:userID", async (req, res) => {
   }
 });
 
-// Get a users friends by userID
+// Get a user's friends by userID
 app.get("/api/users/friends/:userID", async (req, res) => {
   try {
-    const user = await User.findOne({ userID: req.params.userID }); // Use userID instead of _id
+    const user = await User.findOne({ userID: req.params.userID });
     if (!user) return res.status(404).json({ message: "User not found" });
-    const friends = await user.friends.map(id => User.findOne({userID: id}));
+    const friends = await Promise.all(user.friends.map(id => User.findOne({ userID: id })));
     res.status(200).json(friends);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Create a new user
 app.post("/api/users", async (req, res) => {
