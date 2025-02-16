@@ -55,24 +55,20 @@ export default function HomeScreen() {
   }
   return (
     <SafeAreaProvider>
-      <View style={styles.container}>
-        <View>
-          <SearchBar
-            placeholder=". . ."
-            onChangeText={(search) => {
-              setSearch(search);
-            }}
-            value={search}
-            containerStyle={{
-              backgroundColor: "white",
-              borderWidth: 1,
-              borderRadius: 5,
-              margin: 20,
-            }}
-            inputContainerStyle={{ backgroundColor: "white" }}
-          />
-        </View>
-        <ScrollView style={styles.scrollView}>
+      <ThemeProvider theme={theme}>
+        <View style={styles.container}>
+          <View>
+            <SearchBar
+              placeholder=". . ."
+              onChangeText={(search) => {
+                setSearch(search);
+              }}
+              value={search}
+              containerStyle={styles.searchBarContainer}
+              inputContainerStyle={styles.searchBarInput}
+            />
+          </View>
+          <ScrollView style={styles.scrollView}>
           {friends.map((friend, index) => {
             return (
               <Card style={styles.postCard}>
@@ -84,8 +80,9 @@ export default function HomeScreen() {
               </Card>
             );
           })}
-        </ScrollView>
-      </View>
+          </ScrollView>
+        </View>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }
@@ -96,6 +93,25 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.primary,
+  },
+  searchBarWrapper: {
+    width: "90%",
+    alignSelf: "center",
+    marginTop: 20,
+    zIndex: 2,
+  },
+  searchBarContainer: {
+    backgroundColor: theme.colors.background,
+    padding: 40,
+    marginTop: 10,
+    marginBottom: -10,
+    borderBottomColor: 0,
+    borderTopColor: 0,
+  },
+  searchBarInput: {
+    borderRadius: 30,
+    marginBottom: -20,
+    backgroundColor: "white",
   },
   view1: {
     flex: 1,
@@ -109,13 +125,6 @@ const styles = StyleSheet.create({
     marginLeft: -25,
     zIndex: 10, // Ensure it appears above other elements
   },
-  /* cameraButtonContainer: {
-    position: "absolute",
-    bottom: 60, // Adjust this value if needed
-    left: "50%",
-    marginLeft: -25, // Adjust to center the button
-    zIndex: 10,
-  }, */
   searchBar: {
     marginTop: 10,
   },
