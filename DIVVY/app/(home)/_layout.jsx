@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { Icon } from "@rneui/themed";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Button } from "react-native-elements";
 import { useRouter } from "expo-router";
 
@@ -27,7 +27,7 @@ export default function HomeLayout() {
             height: 100,
             paddingBottom: 10,
             bottom: 0,
-            zIndex: 5, // Tab bar below camera button
+            //zIndex: 5, // Tab bar below camera button
           },
           tabBarItemStyle: {
             justifyContent: "center",
@@ -73,12 +73,12 @@ export default function HomeLayout() {
       {/* Camera Button */}
       <View style={styles.cameraButtonContainer}>
         <Button
-          icon={{
+          /* icon={{
             name: "camera",
             type: "font-awesome",
             size: 40,
             color: "white",
-          }}
+          }} */
           buttonStyle={{
             backgroundColor: theme.colors.primary,
             borderRadius: 50,
@@ -90,7 +90,15 @@ export default function HomeLayout() {
             padding: 0,
           }}
           onPress={() => router.push("/(scan)/camera")}
-        />
+          >
+        </Button>
+        <TouchableOpacity style={styles.imageContainer} onPress={() => router.push("/(scan)/camera")}>
+        <Image
+              source={require("/Users/Ally/Documents/Hackher25Project/DIVVY/DIVVY/assets/images/divvy.png")} // Replace with your image
+              style={{ width: 70, height: 70, position: "absolute", bottom: 5, right: 25, zIndex: 10,}} // Adjust size
+              resizeMode="contain"
+            />
+        </TouchableOpacity>
       </View>
     </View>
   );
