@@ -32,3 +32,7 @@ You can start developing by editing the files inside the **app** directory. This
 Maybe some helpful notes:
 - File-based routing: The example app has 2 screens, Home (/app-example/app/(tabs)/index.tsx) and Explore (/app-example/app/(tabs)/explore.tsx).
 - _layout.tsx defines shared UI elements such as headers, tab bars so that they persist between different routes
+
+# IMPORTANT FILE NOTES
+- index.jsx inside /app/(home) is the entry point
+- every 'folder' needs a _layout.jsx in order for react router to work properly
