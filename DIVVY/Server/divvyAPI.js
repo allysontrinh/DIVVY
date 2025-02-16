@@ -156,7 +156,7 @@ app.put("/api/users/events/:userID", async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { userID: req.params.userID },
-      { $push: { 'events.participating': ...req.body.events.participating } }, // Add to the participating array
+      { $push: { 'events.$.participating': req.body.events.participating } }, // Use the existing event
       { new: true }
     );
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -165,6 +165,7 @@ app.put("/api/users/events/:userID", async (req, res) => {
     res.status(500).json({ message: "Error updating user events: " + err.message });
   }
 });
+
 
 
 // Delete a user
