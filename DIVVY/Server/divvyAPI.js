@@ -16,7 +16,13 @@ mongoose.connect(uri)
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"],
+  credentials: true
+}));
+
 app.use(bodyParser.json());
 
 // Define Mongoose Schemas
