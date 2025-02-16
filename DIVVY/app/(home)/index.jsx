@@ -37,13 +37,8 @@ export default function HomeScreen() {
                 setSearch(search);
               }}
               value={search}
-              containerStyle={{
-                backgroundColor: "white",
-                borderWidth: 1,
-                borderRadius: 5,
-                margin: 20,
-              }}
-              inputContainerStyle={{ backgroundColor: "white" }}
+              containerStyle={styles.searchBarContainer}
+              inputContainerStyle={styles.searchBarInput}             
             />
           </View>
           <ScrollView style={styles.scrollView}>
@@ -82,29 +77,6 @@ export default function HomeScreen() {
               <Text>I HATE LINGUINE'S....</Text>
             </Card>
           </ScrollView>
-          {/* <View style={styles.cameraButtonContainer}>
-            <Button
-              icon={{
-                name: "camera",
-                type: "font-awesome",
-                size: 20,
-                color: "white",
-              }}
-              buttonStyle={{
-                backgroundColor: theme.colors.primary,
-                borderColor: "transparent",
-                //borderWidth: 0,
-                borderRadius: 30,
-                width: 50,
-                height: 50,
-              }}
-              containerStyle={{
-                width: 200,
-                padding: 0,
-              }}
-              onPress={() => router.push("/(scan)/camera")}
-            />
-          </View> */}
         </View>
       </ThemeProvider>
     </SafeAreaProvider>
@@ -115,6 +87,25 @@ export default function HomeScreen() {
  * This variable acts as CSS. Use it on the style attribute of any React component.
  */
 const styles = StyleSheet.create({
+  searchBarWrapper: {
+    width: "90%",
+    alignSelf: "center",
+    marginTop: 20,
+    zIndex: 2,
+  },
+  searchBarContainer: {
+    backgroundColor: theme.colors.background,
+    padding: 40,
+    marginTop: 10,
+    marginBottom: -10,
+    borderBottomColor: 0,
+    borderTopColor: 0,
+  },
+  searchBarInput: {
+    borderRadius: 30,
+    marginBottom: -20,
+    backgroundColor: "white",
+  },
   view1: {
     flex: 1,
     justifyContent: "flex-start", // Align items from top
@@ -127,13 +118,6 @@ const styles = StyleSheet.create({
     marginLeft: -25,
     zIndex: 10, // Ensure it appears above other elements
   },
-  /* cameraButtonContainer: {
-    position: "absolute",
-    bottom: 60, // Adjust this value if needed
-    left: "50%",
-    marginLeft: -25, // Adjust to center the button
-    zIndex: 10,
-  }, */
   searchBar: {
     marginTop: 10,
   },
