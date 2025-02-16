@@ -4,12 +4,7 @@ export const fetchFriends = async (userID, setFriends, setLoading) => {
   try {
     if (setLoading) setLoading(true);
     const response = await axios.get(
-      `http://divvy-8y34.onrender.com/api/users/friends/${userID}`, {
-        headers:{
-            "Content-Type":"application/json",
-        },
-        withCredentials: true,
-    }
+      `https://divvy-8y34.onrender.com/api/users/friends/${userID}`
     );
     setFriends(response.data);
   } catch (error) {

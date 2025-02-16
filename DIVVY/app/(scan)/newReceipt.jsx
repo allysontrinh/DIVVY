@@ -13,20 +13,23 @@ import { fetchFriends } from "../_utils/getFriends";
 import { postReceipt } from "../_utils/postReceipt";
 import { useUser } from "../_utils/userContext";
 import { CheckBox } from "@rneui/themed";
+import { addFriend } from "../_utils/addFriend";
 
 export default function NewReceiptScreen({ veryfiData }) {
   const itemList = veryfiData.line_items;
   const router = useRouter();
   const [friends, setFriends] = useState([]);
-  const [eventID, setEventID] = useState(-1);
   const { user, login } = useUser();
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); // Controls modal visibility
   const [check, setCheck] = useState(false);
 
-  const addFriends = async () => {
+  const receiptID = veryfiData.id;
+
+  const handlePost = async () => {
     try {
-      postReceipt(setEventID, veryfiData.id, user.id, veryfiData);
+      const hi = await postReceipt(receiptID, user.id, veryfiData);
+      console.log(hi);
     } catch (error) {
       console.log(error);
     }
@@ -54,20 +57,20 @@ export default function NewReceiptScreen({ veryfiData }) {
       <ScrollView style={{ marginTop: 20, width: "100%" }}>
         {itemList.map((item, index) => (
           <View key={index}>
-            <Text key={index} style={{ marginBottom: 10 }}>
+            <Text key={index + 1} style={{ marginBottom: 10 }}>
               Item: {item.description}
             </Text>
-            <Text key={index} style={{ marginBottom: 10 }}>
+            <Text key={index + 2} style={{ marginBottom: 10 }}>
               Quantity: {item.quantity}
             </Text>
-            <Text key={index} style={{ marginBottom: 10 }}>
+            <Text key={index + 3} style={{ marginBottom: 10 }}>
               Price: {item.total}
             </Text>
           </View>
         ))}
       </ScrollView>
 
-      <Button title="Add Friends" onPress={addFriends} />
+      <Button title="Add Friends" onPress={() => handlePost()} />
       <Button
         title="Go Back Home"
         onPress={() => router.push("/(home)/home")}
@@ -106,7 +109,7 @@ export default function NewReceiptScreen({ veryfiData }) {
             {loading ? (
               <ActivityIndicator size="large" color="blue" />
             ) : (
-              friends.map((friend) => (
+              friends.map((friend, index) => (
                 // <CheckBox
                 //   center
                 //   title={friend.name}
@@ -114,15 +117,17 @@ export default function NewReceiptScreen({ veryfiData }) {
                 //   onPress={() => setCheck(!check)}
                 // />
                 <TouchableOpacity
-                  key={friend.id}
-                  onPress={() => console.log(`Selected ${friend.name}`)}
+                  key={index + 1}
+                  onPress={() => addFriend(user.userID, friend.userID, receiptID)}
                   style={{
                     padding: 10,
                     borderBottomWidth: 1,
                     borderBottomColor: "#ccc",
                   }}
                 >
-                  <Text style={{ fontSize: 16 }}>{friend.name}</Text>
+                  <Text key={index} style={{ fontSize: 16 }}>
+                    {friend.name}
+                  </Text>
                 </TouchableOpacity>
               ))
             )}

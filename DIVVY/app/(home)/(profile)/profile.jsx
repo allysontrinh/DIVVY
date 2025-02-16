@@ -1,25 +1,19 @@
-import { React, useState } from "react";
-import { fetchFriends } from "../../_utils/getFriends";
+import { React, useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
-  TouchableOpacity,
   Modal,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { Avatar, Button } from "react-native-elements";
 import { Dimensions } from "react-native";
 import { useRouter } from "expo-router";
 import theme from "../../_constants/theme";
 import { useUser } from "../../_utils/userContext";
-
-/**
- * Profile page
- * Matching Path: /profile
- * @returns
- */
+import { getActivity } from "../../_utils/getActivity";
 
 // Get the device height for responsiveness
 const { height } = Dimensions.get("window");
@@ -29,13 +23,19 @@ export default function ProfileScreen() {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [participating, setParticipating] = useState([]);
 
-  const { user, login } = useUser();
+  const { user } = useUser();
 
   const dynamicTopMargin = height > 800 ? 40 : 20; // Dynamic top margin for larger screens
   const showReceipt = () => {
     router.push("/(profile)/existingReceipt");
   };
+
+  // Fetch the participating events when the component mounts
+  useEffect(() => {
+    getActivity(user.id, setParticipating, setLoading);
+  }, [user.id]);
 
   const displayFriends = async () => {
     try {
@@ -80,7 +80,7 @@ export default function ProfileScreen() {
               ) : (
                 <>
                   {friends.map((friend, index) => (
-                    <Text>{friend.name}</Text>
+                    <Text key={index}>{friend.name}</Text>
                   ))}
                   <Button
                     title="Close"
@@ -93,18 +93,21 @@ export default function ProfileScreen() {
         </Modal>
       </View>
 
-      {/* Inbox Section */}
+      {/* Inbox Section - Showing only events with status "in-progress" */}
       <View style={styles.section}>
         <Text style={styles.inboxTitle}>Inbox 📫</Text>
-        <TouchableOpacity onPress={showReceipt}>
-          <Text>Tab 1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text>Tab 2</Text>
-        </TouchableOpacity>
+        {participating.length > 0 ? (
+          participating.map((event, index) => (
+            <TouchableOpacity key={index}>
+              <Text>{`Event ${event.eventID} - Status: ${event.status}`}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text>No in-progress events</Text>
+        )}
       </View>
 
-      {/* IN PROGRESS Section */}
+      {/* Other sections (Optional) */}
       <View style={styles.section}>
         <Text style={styles.inProgressTitle}>In Progress 🚧</Text>
         <TouchableOpacity>
@@ -115,7 +118,6 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* COMPLETED Section */}
       <View style={styles.section}>
         <Text style={styles.completedTitle}>Completed ✅</Text>
         <TouchableOpacity>
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
     backgroundColor: "white",
@@ -142,11 +144,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "80%",
     alignItems: "center",
-  },
-  userName: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
   },
   container: {
     flex: 1,
@@ -158,12 +155,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   avatarContainer: {
-    marginBottom: 10, // Ensure space between avatar and name
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    marginBottom: 10,
   },
   name: {
     fontSize: 24,
@@ -185,12 +177,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginBottom: 10,
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  completedTitle: {
-    color: theme.colors.completeColor,
+  inboxTitle: {
+    color: theme.colors.inboxColor,
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
@@ -201,8 +189,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  inboxTitle: {
-    color: theme.colors.inboxColor,
+  completedTitle: {
+    color: theme.colors.completeColor,
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,

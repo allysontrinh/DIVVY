@@ -1,10 +1,9 @@
 import axios from "axios";
 
-export const postReceipt = async (setEventID, receiptID, userID, veryfiData) => {
-    const eventID = Math.random()
+export const postReceipt = async (receiptID, userID, veryfiData) => {
     const reqBody = {
         receiptID: receiptID,
-        eventID: eventID,
+        eventID:  Math.random(),
         totalPrice: veryfiData.total,
         pricePerUser: 0,
         priceRemaining: veryfiData.total,
@@ -19,16 +18,10 @@ export const postReceipt = async (setEventID, receiptID, userID, veryfiData) => 
         history: []
       };
 
-    setEventID(eventID)
     try {
       const response = await axios.post(
-        "http://divvy-8y34.onrender.com/api/receipts/",
-        reqBody, {
-            headers:{
-                "Content-Type":"application/json",
-            },
-            withCredentials: true,
-        }
+        "https://divvy-8y34.onrender.com/api/receipts",
+        reqBody
       );
       console.log("Receipt uploaded:", response.data);
     } catch (error) {
