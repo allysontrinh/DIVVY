@@ -18,7 +18,7 @@ const theme = {
     secondary: "#0056b3", // Darker blue for buttons
     background: "#f4f4f4", // Light background color
     surface: "#ffffff", // White surface for cards and buttons
-    text: "#000000", // Black text color
+    maintext: "#000000", // Black text color
   },
 };
 

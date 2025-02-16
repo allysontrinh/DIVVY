@@ -34,7 +34,6 @@ export default function HomeLayout() {
             alignItems: "center",
           },
           tabBarIconStyle: {
-            justifyContent: "space-between",
             marginBottom: 5,
             width: 100,
             height: 65,
@@ -46,8 +45,12 @@ export default function HomeLayout() {
           options={{
             title: "Home",
             tabBarIcon: ({ color, size }) => (
-              <Icon name="home" type="material" color={theme.colors.secondary} size={size * 1.5} />
+              <Icon name="home" type="material" color={theme.colors.secondary} size={size * 1.75} />
             ),
+            tabBarItemStyle: {
+              position: "absolute",
+              left: "5%",
+            },
             tabBarLabel: () => null, 
           }}
         />
@@ -56,8 +59,12 @@ export default function HomeLayout() {
           options={{
             title: "Profile",
             tabBarIcon: ({ color, size }) => (
-              <Icon name="person" type="material" color={theme.colors.secondary} size={size * 1.5} />
+              <Icon name="person" type="material" color={theme.colors.secondary} size={size * 1.75} />
             ),
+            tabBarItemStyle: {
+              position: "absolute",
+              right: "5%",
+            },
             tabBarLabel: () => null, 
           }}
         />
