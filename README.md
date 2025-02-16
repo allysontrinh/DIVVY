@@ -1,7 +1,8 @@
-## 🚅 Quick Jump to API Endpoints
+## 🚅 Quick Jump
 - [User Endpoints](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#user-endpoints)
 - [Ticket Endpoints](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#ticket-endpoints)
 - [Receipt Endpoints](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#receipt-endpoints)
+- [Deployment](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#-deployment)
 
 # DivvyAPI
 
