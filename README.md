@@ -1,6 +1,6 @@
-# DIVVY
+# DIVVY: Server Branch
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is the server branch for DIVVY's backend and API.  API can be accessed [here](https://divvy-8y34.onrender.com/api)
 
 ## Get Started:
 1. cd DIVVY
