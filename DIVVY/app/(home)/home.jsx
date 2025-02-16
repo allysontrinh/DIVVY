@@ -11,14 +11,18 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "react-native-elements";
 import { SearchBar, Card } from "@rneui/themed";
 import theme from "../_constants/theme";
+import { useUser } from "../_utils/userContext";
 
 export default function HomeScreen() {
   const [search, setSearch] = useState("");
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { user, login } = useUser();
+
   useEffect(() => {
-    fetchFriends(setFriends, setLoading); // Call the reusable function
+    fetchFriends(user.id, setFriends, setLoading);
+    console.log(friends);
   }, []);
 
   if (loading) {

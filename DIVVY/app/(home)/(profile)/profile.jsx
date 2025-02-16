@@ -13,6 +13,7 @@ import { Avatar, Button } from "react-native-elements";
 import { Dimensions } from "react-native";
 import { useRouter } from "expo-router";
 import theme from "../../_constants/theme";
+import { useUser } from "../../_utils/userContext";
 
 /**
  * Profile page
@@ -29,6 +30,8 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const { user, login } = useUser();
+
   const dynamicTopMargin = height > 800 ? 40 : 20; // Dynamic top margin for larger screens
   const showReceipt = () => {
     router.push("/(profile)/existingReceipt");
@@ -36,7 +39,7 @@ export default function ProfileScreen() {
 
   const displayFriends = async () => {
     try {
-      await fetchFriends(setFriends, setLoading);
+      await fetchFriends(user.id, setFriends, setLoading);
       setIsModalVisible(true);
     } catch (error) {
       console.log(error);
@@ -55,7 +58,7 @@ export default function ProfileScreen() {
           containerStyle={styles.avatarContainer}
         />
         <View style={styles.userName}>
-          <Text style={styles.name}>Allyson</Text>
+          <Text style={styles.name}>{user.name}</Text>
         </View>
 
         <Button
