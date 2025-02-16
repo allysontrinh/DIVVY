@@ -1,3 +1,4 @@
+import { fetchFriends } from "../../_utils/getFriends";
 import { React, useState, useEffect } from "react";
 import {
   View,
