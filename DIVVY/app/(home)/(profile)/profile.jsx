@@ -116,7 +116,8 @@ export default function ProfileScreen() {
         </Modal>
       </View>
 
-      {/* Inbox Section */}
+      <ScrollView>
+        {/* Inbox Section */}
       <View style={styles.section}>
         <Text style={styles.inboxTitle}>Inbox 📫</Text>
         <TouchableOpacity onPress={showReceipt}>
@@ -148,6 +149,7 @@ export default function ProfileScreen() {
           <Text>Tab 2</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -245,7 +247,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   section: {
-    marginTop: 30,
+    marginTop: 10,
     padding: 16,
     backgroundColor: "white",
     marginBottom: 10,
