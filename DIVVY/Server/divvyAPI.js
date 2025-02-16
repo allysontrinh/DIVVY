@@ -151,6 +151,16 @@ app.get("/api/tickets", async (req, res) => {
   }
 });
 
+app.get("/api/tickets/ticketID/:ticketID", async (req, res) => {
+  try {
+    const ticket = await Ticket.findOne({ ticketID: req.params.ticketID }); 
+    if (!ticket) return res.status(404).json({ message: "Ticket not found" });
+    res.status(200).json(receipts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Create a new ticket
 app.post("/api/tickets", async (req, res) => {
   try {
@@ -170,6 +180,17 @@ app.get("/api/receipts", async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+});
+
+// Get a single receipt from receiptID
+app.get("/api/receipts/receiptID/:receiptID", async (req, res) => {
+try {
+  const receipt = await Receipt.findOne({ receiptID: req.params.receiptID }); 
+  if (!receipt) return res.status(404).json({ message: "Receipt not found" });
+  res.status(200).json(receipts);
+} catch (err) {
+  res.status(500).json({ message: err.message });
+}
 });
 
 // Create a new receipt
