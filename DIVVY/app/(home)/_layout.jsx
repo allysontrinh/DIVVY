@@ -7,8 +7,9 @@ import { useRouter } from "expo-router";
 // Custom theme to use with react native elements
 const theme = {
   colors: {
-    primary: "#007bff", // Blue color
-    secondary: "#0056b3", // Darker blue for buttons
+    primary: "#b5a1ed", // Blue color
+    secondary: "#9a86db", // Darker blue for buttons
+    text: "#000000",
   },
 };
 
@@ -23,9 +24,21 @@ export default function HomeLayout() {
           headerShown: false,
           tabBarStyle: {
             position: "absolute", // Ensure the tab bar is fixed at the bottom
+            height: 100,
+            paddingBottom: 10,
             bottom: 0,
             zIndex: 5, // Tab bar below camera button
           },
+          tabBarItemStyle: {
+            justifyContent: "center",
+            alignItems: "center",
+          },
+          tabBarIconStyle: {
+            justifyContent: "space-between",
+            marginBottom: 5,
+            width: 100,
+            height: 65,
+          }
         }}
       >
         <Tabs.Screen
@@ -33,8 +46,9 @@ export default function HomeLayout() {
           options={{
             title: "Home",
             tabBarIcon: ({ color, size }) => (
-              <Icon name="home" type="material" color={color} size={size} />
+              <Icon name="home" type="material" color={theme.colors.secondary} size={size * 1.5} />
             ),
+            tabBarLabel: () => null, 
           }}
         />
         <Tabs.Screen
@@ -42,8 +56,9 @@ export default function HomeLayout() {
           options={{
             title: "Profile",
             tabBarIcon: ({ color, size }) => (
-              <Icon name="person" type="material" color={color} size={size} />
+              <Icon name="person" type="material" color={theme.colors.secondary} size={size * 1.5} />
             ),
+            tabBarLabel: () => null, 
           }}
         />
       </Tabs>
@@ -54,14 +69,14 @@ export default function HomeLayout() {
           icon={{
             name: "camera",
             type: "font-awesome",
-            size: 50,
+            size: 40,
             color: "white",
           }}
           buttonStyle={{
             backgroundColor: theme.colors.primary,
             borderRadius: 50,
-            width: 100,
-            height: 100,
+            width: 80,
+            height: 80,
           }}
           containerStyle={{
             width: 100,
@@ -77,9 +92,9 @@ export default function HomeLayout() {
 const styles = StyleSheet.create({
   cameraButtonContainer: {
     position: "absolute",
-    bottom: 30, // Position above the tab bar
+    bottom: 40, // Position above the tab bar
     left: "50%",
-    marginLeft: -50, // Center it horizontally
+    marginLeft: -40, // Center it horizontally
     zIndex: 10, // Ensure it appears above the tab bar
   },
 });

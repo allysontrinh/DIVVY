@@ -14,7 +14,7 @@ import { SearchBar, Card } from "@rneui/themed";
 // Custom theme to use with react native elements :3
 const theme = {
   colors: {
-    primary: "#007bff", // Blue color
+    primary: "#e9def5", // Blue color
     secondary: "#0056b3", // Darker blue for buttons
     background: "#f4f4f4", // Light background color
     surface: "#ffffff", // White surface for cards and buttons
