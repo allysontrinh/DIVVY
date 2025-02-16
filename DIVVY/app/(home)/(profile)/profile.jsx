@@ -131,7 +131,7 @@ export default function ProfileScreen() {
             </TouchableOpacity>
           ))
         ) : (
-          <Text>No in-progress events</Text>
+          <Text style={styles.trackedItem}>NO IN-PROGRESS EVENTS</Text>
         )}
       </View>
 
@@ -139,20 +139,20 @@ export default function ProfileScreen() {
       <View style={styles.section}>
         <Text style={styles.inProgressTitle}>In Progress 🚧</Text>
         <TouchableOpacity>
-          <Text>Tab 1</Text>
+          <Text style={styles.trackedItem}>TAB 1</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text>Tab 2</Text>
+          <Text style={styles.trackedItem}>TAB 2</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.completedTitle}>Completed ✅</Text>
         <TouchableOpacity>
-          <Text>Tab 1</Text>
+          <Text style={styles.trackedItem}>TAB 1</Text>
         </TouchableOpacity>
         <TouchableOpacity>
-          <Text>Tab 2</Text>
+          <Text style={styles.trackedItem}>TAB 2</Text>
         </TouchableOpacity>
       </View>
       </ScrollView>
@@ -277,5 +277,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  trackedItem: {
+    marginTop: 10,
+    left: 20,
+    fontSize: 18,
+    fontWeight: "500"
   },
 });
