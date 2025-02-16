@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Avatar, Button } from "react-native-elements";
 import { Dimensions } from "react-native";
+import { useRouter } from "expo-router";
 
 /**
  * Profile page
@@ -19,7 +20,11 @@ import { Dimensions } from "react-native";
 const { height } = Dimensions.get("window");
 
 export default function ProfileScreen() {
+  const router = useRouter();
   const dynamicTopMargin = height > 800 ? 40 : 20; // Dynamic top margin for larger screens
+  const showReceipt = () => {
+    router.push("/(profile)/existingReceipt");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -42,23 +47,35 @@ export default function ProfileScreen() {
 
       {/* Inbox Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Inbox</Text>
-        <Text>Tab 1</Text>
-        <Text>Tab 2</Text>
+        <Text style={styles.inboxTitle}>Inbox</Text>
+        <TouchableOpacity onPress={showReceipt}>
+          <Text>Tab 1</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text>Tab 2</Text>
+        </TouchableOpacity>
       </View>
 
       {/* IN PROGRESS Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>In Progress</Text>
-        <Text>Tab 1</Text>
-        <Text>Tab 2</Text>
+        <Text style={styles.inProgressTitle}>In Progress</Text>
+        <TouchableOpacity>
+          <Text>Tab 1</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text>Tab 2</Text>
+        </TouchableOpacity>
       </View>
 
       {/* COMPLETED Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Completed</Text>
-        <Text>Tab 1</Text>
-        <Text>Tab 2</Text>
+        <Text style={styles.completedTitle}>Completed</Text>
+        <TouchableOpacity>
+          <Text>Tab 1</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text>Tab 2</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -105,5 +122,23 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  completedTitle: {
+    color: "green",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  inProgressTitle: {
+    color: "orange",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  inboxTitle: {
+    color: "blue",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
 });

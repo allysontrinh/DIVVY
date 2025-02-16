@@ -8,6 +8,7 @@ export default function ProfileLayout() {
   return (
     <Stack>
       <Stack.Screen name="profile" options={{ headerShown: false }} />
+      <Stack.Screen name="existingReceipt" options={{ headerShown: false }} />
     </Stack>
   );
 }
