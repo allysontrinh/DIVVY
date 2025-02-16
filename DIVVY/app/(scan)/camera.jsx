@@ -107,7 +107,9 @@ export default function Camera() {
       {loading ? (
         <ActivityIndicator size="large" color="#3498db" />
       ) : (
-        <Button title="Take Picture" onPress={pickImage}>Take Picture</Button>
+        <Button title="Take Picture" onPress={pickImage}>
+          Take Picture
+        </Button>
       )}
     </View>
   );
