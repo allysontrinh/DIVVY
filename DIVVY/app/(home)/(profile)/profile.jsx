@@ -1,26 +1,21 @@
-import { React, useState } from "react";
-import { fetchFriends } from "../../_utils/getFriends";
+import { React, useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
-  TouchableOpacity,
   Modal,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { Card } from "@rneui/themed";
 import { Avatar, Button } from "react-native-elements";
 import { Dimensions } from "react-native";
 import { useRouter } from "expo-router";
 import theme from "../../_constants/theme";
-
-/**
- * Profile page
- * Matching Path: /profile
- * @returns
- */
+import { useUser } from "../../_utils/userContext";
+import { getActivity } from "../../_utils/getActivity";
 
 // Get the device height for responsiveness
 const { height } = Dimensions.get("window");
@@ -30,15 +25,23 @@ export default function ProfileScreen() {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [participating, setParticipating] = useState([]);
+
+  const { user } = useUser();
 
   const dynamicTopMargin = height > 800 ? 40 : 20; // Dynamic top margin for larger screens
   const showReceipt = () => {
     router.push("/(profile)/existingReceipt");
   };
 
+  // Fetch the participating events when the component mounts
+  useEffect(() => {
+    getActivity(user.id, setParticipating, setLoading);
+  }, [user.id]);
+
   const displayFriends = async () => {
     try {
-      await fetchFriends(setFriends, setLoading);
+      await fetchFriends(user.id, setFriends, setLoading);
       setIsModalVisible(true);
     } catch (error) {
       console.log(error);
@@ -51,15 +54,15 @@ export default function ProfileScreen() {
         <Avatar
           rounded
           size="xlarge"
-          source={
-            "https://cdn.pixabay.com/photo/2019/11/03/20/11/portrait-4599553__340.jpg"
-          }
+          source={{
+            uri: "https://cdn.pixabay.com/photo/2019/11/03/20/11/portrait-4599553__340.jpg"
+          }}
           containerStyle={styles.avatarContainer}
         />
         <View style={styles.userName}>
-          <Text style={styles.name}>Allyson</Text>
+          <Text style={styles.name}>{user.name}</Text>
         </View>
-
+  
         <Button
           title="View Friends"
           buttonStyle={styles.button}
@@ -77,58 +80,61 @@ export default function ProfileScreen() {
                 <ActivityIndicator size="large" color="blue" />
               ) : (
                 <>
-                <Text style={styles.friendsTitle}>Friends</Text>
-                <View style={styles.friendsList}>
-                <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}>
-                  {friends.map((friend, index) => (
-                    <View key={index} style={styles.cardWrapper}>
-                      <Card containerStyle={[
-                          styles.card,
-                          { 
-                            borderWidth: 0, 
-                            borderColor: 'transparent', 
-                            shadowOpacity: 0, 
-                            shadowRadius: 0, 
-                            elevation: 0,
-                            backgroundColor: 'white' // Ensure there's no background shadow effect
-                          }
-                        ]}>
-                        <Text style={styles.friendName}>👤 {friend.name}</Text>
-                      </Card>
-                      <View style={styles.horizontalLine} />
+                  <Text style={styles.friendsTitle}>Friends</Text>
+                  <View style={styles.friendsList}>
+                    <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}>
+                      {friends.map((friend, index) => (
+                        <View key={index} style={styles.cardWrapper}>
+                          <Card containerStyle={[
+                              styles.card,
+                              { 
+                                borderWidth: 0, 
+                                borderColor: 'transparent', 
+                                shadowOpacity: 0, 
+                                shadowRadius: 0, 
+                                elevation: 0,
+                                backgroundColor: 'white' // Ensure there's no background shadow effect
+                              }
+                            ]}>
+                            <Text style={styles.friendName}>👤 {friend.name}</Text>
+                          </Card>
+                          <View style={styles.horizontalLine} />
+                        </View>
+                      ))}
+                    </ScrollView>
+                    <View style={styles.buttonWrapper}>
+                      <Button
+                        title="Close"
+                        onPress={() => setIsModalVisible(false)}
+                        buttonStyle={styles.closeButton}
+                        titleStyle={styles.closeButtonText}
+                      />
                     </View>
-                  ))}
-                  
-                </ScrollView>
-                <View style={styles.buttonWrapper}>
-                    <Button
-                      title="Close"
-                      onPress={() => setIsModalVisible(false)}
-                      buttonStyle={styles.closeButton}
-                      titleStyle={styles.closeButtonText}
-                    />
                   </View>
-                </View>
                 </>
               )}
             </View>
           </View>
         </Modal>
       </View>
+   
 
       <ScrollView>
-        {/* Inbox Section */}
+        {/* Inbox Section - Showing only events with status "in-progress" */}
       <View style={styles.section}>
         <Text style={styles.inboxTitle}>Inbox 📫</Text>
-        <TouchableOpacity onPress={showReceipt}>
-          <Text>Tab 1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text>Tab 2</Text>
-        </TouchableOpacity>
+        {participating.length > 0 ? (
+          participating.map((event, index) => (
+            <TouchableOpacity key={index}>
+              <Text>{`Event ${event.eventID} - Status: ${event.status}`}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text>No in-progress events</Text>
+        )}
       </View>
 
-      {/* IN PROGRESS Section */}
+      {/* Other sections (Optional) */}
       <View style={styles.section}>
         <Text style={styles.inProgressTitle}>In Progress 🚧</Text>
         <TouchableOpacity>
@@ -139,7 +145,6 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* COMPLETED Section */}
       <View style={styles.section}>
         <Text style={styles.completedTitle}>Completed ✅</Text>
         <TouchableOpacity>
@@ -159,7 +164,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
     backgroundColor: "white",
@@ -225,12 +230,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   avatarContainer: {
-    marginBottom: 10, // Ensure space between avatar and name
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    marginBottom: 10,
   },
   name: {
     fontSize: 24,
@@ -252,12 +252,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginBottom: 10,
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  completedTitle: {
-    color: theme.colors.completeColor,
+  inboxTitle: {
+    color: theme.colors.inboxColor,
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
@@ -268,8 +264,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
-  inboxTitle: {
-    color: theme.colors.inboxColor,
+  completedTitle: {
+    color: theme.colors.completeColor,
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,

@@ -16,6 +16,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "react-native-elements";
 import { SearchBar, Card } from "@rneui/themed";
 import theme from "../_constants/theme";
+import { useUser } from "../_utils/userContext";
 
 export default function HomeScreen() {
   const [userData, setUserData] = useState(null);
@@ -52,6 +53,12 @@ export default function HomeScreen() {
     fetchData();
   }, []); // Fetch data whenever userID changes
 
+  const { user, login } = useUser();
+
+  useEffect(() => {
+    fetchFriends(user.id, setFriends, setLoading);
+    console.log(friends);
+  }, []);
 
   if (loading) {
     return (

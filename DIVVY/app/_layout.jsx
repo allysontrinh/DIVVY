@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import { UserProvider } from "./_utils/userContext";
 
 /**
  * Handles layout of Root (everything within /app)
@@ -6,9 +7,12 @@ import { Stack } from "expo-router";
  */
 export default function RootLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="(home)" options={{ headerShown: false }} />
-      <Stack.Screen name="(scan)" options={{ headerShown: false }} />
-    </Stack>
+    <UserProvider>
+      <Stack>
+        <Stack.Screen name="/" options={{ headerShown: false }} />
+        <Stack.Screen name="(home)" options={{ headerShown: false }} />
+        <Stack.Screen name="(scan)" options={{ headerShown: false }} />
+      </Stack>
+    </UserProvider>
   );
 }
