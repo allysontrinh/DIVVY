@@ -1,28 +1,25 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-require('dotenv').config({ path: './mongodb.env' });
 
+// Initialize express app
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// MongoDB connection URI
+const uri = "mongodb+srv://clpope:Quicksc0ped0@cluster0.kamrf.mongodb.net/DivvyDB?retryWrites=true&w=majority";
+
+// Connect to MongoDB
+mongoose.connect(uri)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+// Middleware
 app.use(bodyParser.json());
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  serverSelectionTimeoutMS: 5000,  // Timeout for server selection
-})
-.then(() => {
-  console.log('MongoDB connected');
-})
-.catch((err) => {
-  console.log('MongoDB connection error:', err.message);
-});
+// Define Mongoose Schemas
 
-
-
-// Sample User Schema
+// User Schema
 const userSchema = new mongoose.Schema({
   userID: Number,
   name: String,
@@ -31,58 +28,162 @@ const userSchema = new mongoose.Schema({
     receivedTickets: [Number],
     givenTickets: [Number]
   },
-  events: {
-    hosted: Array,
-    participating: Array
-  }
+  events: [{
+    hosted: [{
+      eventID: Number,
+      receiptID: Number,
+      status: String,
+      photos: [String]
+    }],
+    participating: [{
+      eventID: Number,
+      receiptID: Number,
+      status: String,
+      photos: [String]
+    }]
+  }]
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
-// API Endpoints
-app.get('/users', async (req, res) => {
+// Ticket Schema
+const ticketSchema = new mongoose.Schema({
+  ticketID: Number,
+  giver: {
+    userID: Number
+  },
+  receiver: {
+    userID: Number
+  },
+  type: String,
+  paid: Boolean
+});
+
+const Ticket = mongoose.model("Ticket", ticketSchema);
+
+// Receipt Schema
+const receiptSchema = new mongoose.Schema({
+  receiptID: Number,
+  eventID: Number,
+  totalPrice: Number,
+  pricePerUser: Number,
+  priceRemaining: Number,
+  users: [Number],
+  paid: [Number],
+  items: [{
+    itemID: Number,
+    totalPrice: Number,
+    priceRemaining: Number,
+    pricePerUser: Number
+  }],
+  history: [{
+    userID: Number,
+    paymentAmount: Number,
+    date: String
+  }]
+});
+
+const Receipt = mongoose.model("Receipt", receiptSchema);
+
+// Routes
+
+// Get all users
+app.get("/api/users", async (req, res) => {
   try {
     const users = await User.find();
-    res.json(users);
+    res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-app.post('/users', async (req, res) => {
-  const user = new User(req.body);
+// Get a single user by userID
+app.get("/api/users/userID/:userID", async (req, res) => {
   try {
-    const newUser = await user.save();
-    res.status(201).json(newUser);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
-app.put('/users/:id', async (req, res) => {
-  try {
-    const updatedUser = await User.findOneAndUpdate({ userID: req.params.id }, req.body, { new: true });
-    res.json(updatedUser);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
-app.delete('/users/:id', async (req, res) => {
-  try {
-    await User.findOneAndDelete({ userID: req.params.id });
-    res.json({ message: 'User deleted' });
+    const user = await User.findOne({ userID: req.params.userID }); // Use userID instead of _id
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// Test Route
-app.get('1', (req, res) => {
-  res.send('API is running');
+// Create a new user
+app.post("/api/users", async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+    res.status(201).json(user);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
-// Start Server
+// Update a user
+app.put("/api/users/:id", async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Delete a user
+app.delete("/api/users/:id", async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json({ message: "User deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Get all tickets
+app.get("/api/tickets", async (req, res) => {
+  try {
+    const tickets = await Ticket.find();
+    res.status(200).json(tickets);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Create a new ticket
+app.post("/api/tickets", async (req, res) => {
+  try {
+    const ticket = new Ticket(req.body);
+    await ticket.save();
+    res.status(201).json(ticket);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Get all receipts
+app.get("/api/receipts", async (req, res) => {
+  try {
+    const receipts = await Receipt.find();
+    res.status(200).json(receipts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Create a new receipt
+app.post("/api/receipts", async (req, res) => {
+  try {
+    const receipt = new Receipt(req.body);
+    await receipt.save();
+    res.status(201).json(receipt);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
