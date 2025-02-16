@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "node DIVVY/Server/divvyAPI.js"
+    "start": "node divvyAPI.js"
   },
   "jest": {
     "preset": "jest-expo"
