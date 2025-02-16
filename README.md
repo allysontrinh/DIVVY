@@ -77,6 +77,12 @@ The API will be available at: `http://localhost:PORT`
 - Updates a user’s details by their `userID`.
 - **Response:** The updated user object.
 
+#### `PUT /api/users/events/:userID`
+- Updates a user's participating events by their `userID`.
+- **Request Body:** Contains event data to be added to the participating array.
+- **Response:** The updated user object with the modified events field.
+
+
 #### `DELETE /api/users/:userID`
 - Deletes a user by their `userID`.
 - **Response:**  
