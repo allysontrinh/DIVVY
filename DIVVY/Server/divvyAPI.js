@@ -205,6 +205,17 @@ app.post("/api/tickets", async (req, res) => {
   }
 });
 
+// Delete a ticket by ticketID
+app.delete("/api/tickets/:ticketID", async (req, res) => {
+  try {
+    const ticket = await Ticket.findOneAndDelete({ ticketID: req.params.ticketID });
+    if (!ticket) return res.status(404).json({ message: "Ticket not found" });
+    res.status(200).json({ message: "Ticket deleted", deletedTicket: ticket });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Get all receipts
 app.get("/api/receipts", async (req, res) => {
   try {
@@ -245,6 +256,17 @@ app.post("/api/receipts", async (req, res) => {
     res.status(201).json(receipt);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// Delete a receipt by receiptID
+app.delete("/api/receipts/:receiptID", async (req, res) => {
+  try {
+    const receipt = await Receipt.findOneAndDelete({ receiptID: req.params.receiptID });
+    if (!receipt) return res.status(404).json({ message: "Receipt not found" });
+    res.status(200).json({ message: "Receipt deleted", deletedReceipt: receipt });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
