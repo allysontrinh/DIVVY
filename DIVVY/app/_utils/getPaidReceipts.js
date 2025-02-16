@@ -15,7 +15,7 @@ export const fetchReceipts = async (userID, setUserData, setReceipts, setLoading
 
     // Ensure events and participating exist before filtering
     if (!userData.events || !userData.events.participating) {
-      console.error("Error: Events data is missing or malformed", userData.events);
+      // console.error("Error: Events data is missing or malformed", userData.events);
       setUserData(userData);
       setReceipts([]); // Set receipts to an empty array to prevent further errors
       return;

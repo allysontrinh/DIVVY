@@ -9,7 +9,8 @@ import {
   StyleSheet,
   Image,
   Modal,
-  Button
+  Button,
+  TouchableOpacity
 } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "react-native-elements";
@@ -83,6 +84,7 @@ export default function HomeScreen() {
           />
           <ScrollView style={styles.scrollView}>
             {friends.map((friend, index) => (
+              <TouchableOpacity key={index} onPress={() => openModal(friend)}>
               <Card key={index} onPress={() => openModal(friend)}>
                 <Card.Title style={styles.nameText}>{friend.name}</Card.Title>
                 <Card.Divider />
@@ -122,11 +124,11 @@ export default function HomeScreen() {
                   <Text>No paid tickets found</Text>
                 )}
               </Card>
+              </TouchableOpacity>
             ))}
           </ScrollView>
             {/* Modal to show the user's JSON */}
           <Modal
-            animationType="slide"
             transparent={true}
             visible={modalVisible}
             onRequestClose={closeModal}
