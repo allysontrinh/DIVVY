@@ -1,4 +1,6 @@
 import { React, useState } from "react";
+import { useFonts } from 'expo-font';
+import { Roboto_400Regular } from '@expo-google-fonts/roboto';
 import {
   View,
   Text,
@@ -7,6 +9,7 @@ import {
   Modal,
   TouchableOpacity,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { fetchFriends } from "../_utils/getFriends";
@@ -41,34 +44,58 @@ export default function NewReceiptScreen({ veryfiData }) {
     }
   };
 
+  const [fontsLoaded] = useFonts({
+    Roboto_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>;
+  }
+
   return (
-    <View
+    <ImageBackground
+      source={require("/Users/Ally/Documents/Hackher25Project/DIVVY/DIVVY/assets/images/receipt.png")} // Add your image URL here
       style={{
         flex: 1,
+        padding: 20,
         justifyContent: "center",
         alignItems: "center",
-        padding: 20,
+        backgroundColor: "#e9def5",
       }}
+      imageStyle={{ resizeMode: "cover", marginTop: 30}} // Make sure the image covers the screen
     >
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginTop: 30 }}>
+      <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 36, fontWeight: "bold", marginTop: 100, marginBottom: 20 }}>
         {veryfiData.vendor.name}
       </Text>
 
-      <ScrollView style={{ marginTop: 20, width: "100%" }}>
+      <ScrollView style={{ marginTop: 50, width: "100%" }}>
         {itemList.map((item, index) => (
-          <View key={index}>
-            <Text key={index + 1} style={{ marginBottom: 10 }}>
-              Item: {item.description}
+          <View key={index} style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
+            <Text key={index + 2} style={{ fontFamily: "Roboto_400Regular", marginLeft: 30, marginBottom: 10, flex: 1 }}>
+              {item.quantity}x
             </Text>
-            <Text key={index + 2} style={{ marginBottom: 10 }}>
-              Quantity: {item.quantity}
+            <Text key={index + 1} style={{ fontFamily: "Roboto_400Regular", marginLeft: -80, marginBottom: 10, flex: 1 }}>
+              {item.description}
             </Text>
-            <Text key={index + 3} style={{ marginBottom: 10 }}>
-              Price: {item.total}
+            <Text key={index + 3} style={{ fontFamily: "Roboto_400Regular", marginRight: 30, marginBottom: 10, textAlign: "right", flex: 1}}>
+              ${item.total.toFixed(2)}
             </Text>
           </View>
+          
         ))}
+        
       </ScrollView>
+
+      {/* Grand Total */}
+      <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20, marginBottom: 320, marginLeft: 120 }}>
+        <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 18, fontWeight: "bold" }}>
+          Grand Total:
+        </Text>
+        <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 18, marginLeft: 10, color: "red" }}>
+              ${veryfiData.total.toFixed(2)}
+        </Text>
+      </View>
+     
 
       <Button title="Add Friends" onPress={() => handlePost()} />
       <Button
@@ -136,6 +163,6 @@ export default function NewReceiptScreen({ veryfiData }) {
           </View>
         </View>
       </Modal>
-    </View>
+    </ImageBackground>
   );
 }
