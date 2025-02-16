@@ -1,4 +1,4 @@
-import { fetchPosts } from "../_utils/getFriends"; // Import function
+import { fetchFriends } from "../_utils/getFriends";
 import { useState, useEffect } from "react";
 import {
   ActivityIndicator,
@@ -18,7 +18,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPosts(setFriends, setLoading); // Call the reusable function
+    fetchFriends(setFriends, setLoading); // Call the reusable function
   }, []);
 
   if (loading) {
@@ -105,7 +105,9 @@ const styles = StyleSheet.create({
     margin: 40,
   },
   scrollView: {
-    flex: 1,
+    display: "grid",
+    height: "100vh",
+    width: "100vw",
   },
   loader: {
     flex: 1,

@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Button, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
+import { fetchFriends } from "../_utils/getFriends";
 
 export default function newReceiptScreen({ veryfiData }) {
   const itemList = veryfiData.line_items;

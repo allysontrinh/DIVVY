@@ -1,10 +1,13 @@
 import { React, useState } from "react";
+import { fetchFriends } from "../../_utils/getFriends";
 import {
   View,
   Text,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Modal,
+  ActivityIndicator,
 } from "react-native";
 import { Avatar, Button } from "react-native-elements";
 import { Dimensions } from "react-native";
@@ -22,31 +25,23 @@ const { height } = Dimensions.get("window");
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const [friends, setFriends] = useState();
+  const [friends, setFriends] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const dynamicTopMargin = height > 800 ? 40 : 20; // Dynamic top margin for larger screens
   const showReceipt = () => {
     router.push("/(profile)/existingReceipt");
   };
 
-  const fetchFriends = async () => {
+  const displayFriends = async () => {
     try {
-      setLoading(true);
-      const response = await axios.get(
-        "https://divvy-8y34.onrender.com/api/users/friends/3"
-      );
-      setFriends(response.data);
-
+      await fetchFriends(setFriends, setLoading);
+      setIsModalVisible(true);
     } catch (error) {
-      console.error("Error fetching posts:", error);
-    } finally {
-      setLoading(false); // Hide loader after fetch
+      console.log(error);
     }
   };
-
-  const displayFriends = async () => {
-    await fetchFriends();
-    
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -69,6 +64,30 @@ export default function ProfileScreen() {
           titleStyle={styles.buttonText}
           onPress={displayFriends}
         />
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              {loading ? (
+                <ActivityIndicator size="large" color="blue" />
+              ) : (
+                <>
+                  {friends.map((friend, index) => (
+                    <Text>{friend.name}</Text>
+                  ))}
+                  <Button
+                    title="Close"
+                    onPress={() => setIsModalVisible(false)}
+                  />
+                </>
+              )}
+            </View>
+          </View>
+        </Modal>
       </View>
 
       {/* Inbox Section */}
@@ -108,6 +127,19 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)", // Semi-transparent background
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
   userName: {
     flexDirection: "row",
     alignItems: "center",
