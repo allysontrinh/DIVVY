@@ -8,6 +8,10 @@ DivvyAPI is a backend API designed for managing users, tickets, and receipts for
 - Receipt management (Create, Read)
 - Built using **Node.js**, **Express.js**, and **MongoDB**
 
+## Quick Jump to API Endpoints
+- [User Endpoints]()
+- [Ticket Endpoints]()
+- [Receipt Endpoints]()
 ---
 
 ## 🛠 Setup & Installation
