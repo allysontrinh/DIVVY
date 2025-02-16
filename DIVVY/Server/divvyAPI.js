@@ -151,6 +151,29 @@ app.put("/api/users/:userID", async (req, res) => {
   }
 });
 
+// Update user's events to include a new participating event
+app.put("/api/users/events/:userID", async (req, res) => {
+  try {
+    const { events } = req.body; // Destructure the incoming event data
+    const user = await User.findOne({ userID: req.params.userID });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Check if the event already exists in the participating array
+    events.participating.forEach(event => {
+      const existingEvent = user.events.some(e => e.eventID === event.eventID && e.receiptID === event.receiptID);
+      if (!existingEvent) {
+        user.events.push(event); // Add the event if it doesn't exist
+      }
+    });
+
+    await user.save(); // Save the updated user
+    res.status(200).json(user); // Return the updated user
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Delete a user
 app.delete("/api/users/:userID", async (req, res) => {
   try {
