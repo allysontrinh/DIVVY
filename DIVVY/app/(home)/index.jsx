@@ -1,4 +1,5 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
+import { ActivityIndicator, FlatList } from "react-native";
 import { ThemeProvider, Button } from "react-native-elements";
 import {
   ScrollView,
@@ -10,103 +11,81 @@ import {
 import { useRouter } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { SearchBar, Card } from "@rneui/themed";
-
-// Custom theme to use with react native elements :3
-const theme = {
-  colors: {
-    primary: "#e9def5", // Blue color
-    secondary: "#0056b3", // Darker blue for buttons
-    background: "#f4f4f4", // Light background color
-    surface: "#ffffff", // White surface for cards and buttons
-    text: "#000000", // Black text color
-  },
-};
+import axios from "axios";
+import theme from "../_constants/theme";
 
 export default function HomeScreen() {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const [friends, setFriends] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "https://divvy-8y34.onrender.com/api/users/friends/3"
+      );
+      setFriends(response.data); // Update state with API data
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false); // Hide loader after fetch
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts(); // Fetch posts when component mounts
+    // Set interval to re-fetch data every 5 seconds (5000ms)
+    // const intervalId = setInterval(() => {
+    //   fetchPosts();
+    // }, 5000);
+
+    // // Cleanup interval on component unmount
+    // return () => clearInterval(intervalId);
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    );
+  }
   return (
     <SafeAreaProvider>
-      <ThemeProvider theme={theme}>
-        <View style={{ /* display: "grid" */ flex: 1}}>
-          <View>
-            <SearchBar
-              placeholder=". . ."
-              onChangeText={(search) => {
-                setSearch(search);
-              }}
-              value={search}
-              containerStyle={{
-                backgroundColor: "white",
-                borderWidth: 1,
-                borderRadius: 5,
-                margin: 20,
-              }}
-              inputContainerStyle={{ backgroundColor: "white" }}
-            />
-          </View>
-          <ScrollView style={styles.scrollView}>
-            <Card style={styles.postCard}>
-              <Card.Title>@Allyson.T</Card.Title>
-              <Card.Divider />
-              <Text>I went to this amazing Restaurant...</Text>
-            </Card>
-            <Card>
-              <Card.Title>@Sarah.J</Card.Title>
-              <Card.Divider />
-              <Text>I HATE LINGUINE'S....</Text>
-            </Card>
-            <Card>
-              <Card.Title>@Sarah.J</Card.Title>
-              <Card.Divider />
-              <Text>I HATE LINGUINE'S....</Text>
-            </Card><Card>
-              <Card.Title>@Sarah.J</Card.Title>
-              <Card.Divider />
-              <Text>I HATE LINGUINE'S....</Text>
-            </Card>
-            <Card>
-              <Card.Title>@Sarah.J</Card.Title>
-              <Card.Divider />
-              <Text>I HATE LINGUINE'S....</Text>
-            </Card>
-            <Card>
-              <Card.Title>@Sarah.J</Card.Title>
-              <Card.Divider />
-              <Text>I HATE LINGUINE'S....</Text>
-            </Card>
-            <Card>
-              <Card.Title>@Sarah.J</Card.Title>
-              <Card.Divider />
-              <Text>I HATE LINGUINE'S....</Text>
-            </Card>
-          </ScrollView>
-          {/* <View style={styles.cameraButtonContainer}>
-            <Button
-              icon={{
-                name: "camera",
-                type: "font-awesome",
-                size: 20,
-                color: "white",
-              }}
-              buttonStyle={{
-                backgroundColor: theme.colors.primary,
-                borderColor: "transparent",
-                //borderWidth: 0,
-                borderRadius: 30,
-                width: 50,
-                height: 50,
-              }}
-              containerStyle={{
-                width: 200,
-                padding: 0,
-              }}
-              onPress={() => router.push("/(scan)/camera")}
-            />
-          </View> */}
+      <View style={styles.container}>
+        <View>
+          <SearchBar
+            placeholder=". . ."
+            onChangeText={(search) => {
+              setSearch(search);
+            }}
+            value={search}
+            containerStyle={{
+              backgroundColor: "white",
+              borderWidth: 1,
+              borderRadius: 5,
+              margin: 20,
+            }}
+            inputContainerStyle={{ backgroundColor: "white" }}
+          />
         </View>
-      </ThemeProvider>
+        <ScrollView style={styles.scrollView}>
+          {friends.map((friend, index) => {
+            return (
+              <Card style={styles.postCard}>
+                <Card.Title>{friend.name}</Card.Title>
+                <Card.Divider />
+                <Text>
+                  Spent: $100
+                </Text>
+              </Card>
+            );
+          })}
+        </ScrollView>
+      </View>
     </SafeAreaProvider>
   );
 }
@@ -115,6 +94,9 @@ export default function HomeScreen() {
  * This variable acts as CSS. Use it on the style attribute of any React component.
  */
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: theme.colors.primary,
+  },
   view1: {
     flex: 1,
     justifyContent: "flex-start", // Align items from top
@@ -147,6 +129,11 @@ const styles = StyleSheet.create({
     margin: 40,
   },
   scrollView: {
-    flex: 1, 
+    flex: 1,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 import { Avatar, Button } from "react-native-elements";
 import { Dimensions } from "react-native";
 import { useRouter } from "expo-router";
+import theme from "../../_constants/theme";
 
 /**
  * Profile page
@@ -21,10 +22,31 @@ const { height } = Dimensions.get("window");
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const [friends, setFriends] = useState();
   const dynamicTopMargin = height > 800 ? 40 : 20; // Dynamic top margin for larger screens
   const showReceipt = () => {
     router.push("/(profile)/existingReceipt");
   };
+
+  const fetchFriends = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "https://divvy-8y34.onrender.com/api/users/friends/3"
+      );
+      setFriends(response.data);
+
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false); // Hide loader after fetch
+    }
+  };
+
+  const displayFriends = async () => {
+    await fetchFriends();
+    
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,22 +54,26 @@ export default function ProfileScreen() {
         <Avatar
           rounded
           size="xlarge"
-          source={{ uri: "https://example.com/avatar.jpg" }}
+          source={
+            "https://cdn.pixabay.com/photo/2019/11/03/20/11/portrait-4599553__340.jpg"
+          }
           containerStyle={styles.avatarContainer}
         />
-        <Text style={styles.name}>John Doe</Text>
+        <View style={styles.userName}>
+          <Text style={styles.name}>Allyson</Text>
+        </View>
 
         <Button
           title="View Friends"
           buttonStyle={styles.button}
           titleStyle={styles.buttonText}
-          onPress={() => alert("View Friends Pressed")}
+          onPress={displayFriends}
         />
       </View>
 
       {/* Inbox Section */}
       <View style={styles.section}>
-        <Text style={styles.inboxTitle}>Inbox</Text>
+        <Text style={styles.inboxTitle}>Inbox 📫</Text>
         <TouchableOpacity onPress={showReceipt}>
           <Text>Tab 1</Text>
         </TouchableOpacity>
@@ -58,7 +84,7 @@ export default function ProfileScreen() {
 
       {/* IN PROGRESS Section */}
       <View style={styles.section}>
-        <Text style={styles.inProgressTitle}>In Progress</Text>
+        <Text style={styles.inProgressTitle}>In Progress 🚧</Text>
         <TouchableOpacity>
           <Text>Tab 1</Text>
         </TouchableOpacity>
@@ -69,7 +95,7 @@ export default function ProfileScreen() {
 
       {/* COMPLETED Section */}
       <View style={styles.section}>
-        <Text style={styles.completedTitle}>Completed</Text>
+        <Text style={styles.completedTitle}>Completed ✅</Text>
         <TouchableOpacity>
           <Text>Tab 1</Text>
         </TouchableOpacity>
@@ -82,9 +108,14 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  userName: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
   container: {
     flex: 1,
-    backgroundColor: "#f4f4f4",
+    backgroundColor: theme.colors.primary,
   },
   header: {
     alignItems: "center",
@@ -124,19 +155,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   completedTitle: {
-    color: "green",
+    color: theme.colors.completeColor,
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
   },
   inProgressTitle: {
-    color: "orange",
+    color: theme.colors.progressColor,
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
   },
   inboxTitle: {
-    color: "blue",
+    color: theme.colors.inboxColor,
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
