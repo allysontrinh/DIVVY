@@ -64,30 +64,58 @@ export default function NewReceiptScreen({ veryfiData }) {
       }}
       imageStyle={{ resizeMode: "cover", marginTop: 30}} // Make sure the image covers the screen
     >
+      <View>
       <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 36, fontWeight: "bold", marginTop: 100, marginBottom: 20 }}>
         {veryfiData.vendor.name}
       </Text>
-
-      <ScrollView style={{ marginTop: 50, width: "100%" }}>
+      <View style={{
+        borderBottomWidth: 1.5,
+        borderColor:"rgb(198, 193, 208)",
+      }} />
+      </View>
+      <View style={{ flex: 1, width: "100%"}}>
+      <ScrollView style={{ marginTop: 50, width: "100%"}}
+      contentContainerStyle={{ flexGrow: 1}}
+      >
         {itemList.map((item, index) => (
-          <View key={index} style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10 }}>
-            <Text key={index + 2} style={{ fontFamily: "Roboto_400Regular", marginLeft: 30, marginBottom: 10, flex: 1 }}>
+          <View key={index} style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 15 }}>
+            <Text key={index + 2} style={{ fontFamily: "Roboto_400Regular", marginLeft: 30, flex: 1 }}>
               {item.quantity}x
             </Text>
-            <Text key={index + 1} style={{ fontFamily: "Roboto_400Regular", marginLeft: -80, marginBottom: 10, flex: 1 }}>
+            <Text key={index + 1} style={{ fontFamily: "Roboto_400Regular", marginLeft: -80, flex: 1 }}>
               {item.description}
             </Text>
-            <Text key={index + 3} style={{ fontFamily: "Roboto_400Regular", marginRight: 30, marginBottom: 10, textAlign: "right", flex: 1}}>
+            <Text key={index + 3} style={{ fontFamily: "Roboto_400Regular", fontWeight: "bold", marginRight: 30, textAlign: "right", flex: 1}}>
               ${item.total.toFixed(2)}
             </Text>
           </View>
           
         ))}
-        
-      </ScrollView>
+
+        <View 
+        style={{
+          borderBottomWidth: 1,
+          borderColor:"rgb(198, 193, 208)",
+          left: 30,
+          marginRight: 60,
+        }} 
+        />
 
       {/* Grand Total */}
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20, marginBottom: 320, marginLeft: 120 }}>
+      <View style={{ 
+        paddingTop: 10,
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        paddingHorizontal: 25,
+        marginBottom: 20, // Adds spacing at the bottom
+        /* position: "absolute",
+        bottom: 20,
+        left: 130,
+        flexDirection: "row", 
+        //justifyContent: "space-between", 
+        padding: 10, */
+
+        }}>
         <Text style={{ fontFamily: "Roboto_400Regular", fontSize: 18, fontWeight: "bold" }}>
           Grand Total:
         </Text>
@@ -95,7 +123,9 @@ export default function NewReceiptScreen({ veryfiData }) {
               ${veryfiData.total.toFixed(2)}
         </Text>
       </View>
-     
+      </ScrollView>
+      </View>
+      
 
       <Button title="Add Friends" onPress={() => handlePost()} />
       <Button
