@@ -29,7 +29,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaProvider>
       <ThemeProvider theme={theme}>
-        <View style={{ display: "grid" }}>
+        <View style={{ /* display: "grid" */ flex: 1}}>
           <View>
             <SearchBar
               placeholder=". . ."
@@ -57,32 +57,54 @@ export default function HomeScreen() {
               <Card.Divider />
               <Text>I HATE LINGUINE'S....</Text>
             </Card>
+            <Card>
+              <Card.Title>@Sarah.J</Card.Title>
+              <Card.Divider />
+              <Text>I HATE LINGUINE'S....</Text>
+            </Card><Card>
+              <Card.Title>@Sarah.J</Card.Title>
+              <Card.Divider />
+              <Text>I HATE LINGUINE'S....</Text>
+            </Card>
+            <Card>
+              <Card.Title>@Sarah.J</Card.Title>
+              <Card.Divider />
+              <Text>I HATE LINGUINE'S....</Text>
+            </Card>
+            <Card>
+              <Card.Title>@Sarah.J</Card.Title>
+              <Card.Divider />
+              <Text>I HATE LINGUINE'S....</Text>
+            </Card>
+            <Card>
+              <Card.Title>@Sarah.J</Card.Title>
+              <Card.Divider />
+              <Text>I HATE LINGUINE'S....</Text>
+            </Card>
           </ScrollView>
-          <View style={styles.view2}>
+          {/* <View style={styles.cameraButtonContainer}>
             <Button
               icon={{
                 name: "camera",
                 type: "font-awesome",
-                size: 15,
+                size: 20,
                 color: "white",
               }}
               buttonStyle={{
                 backgroundColor: theme.colors.primary,
                 borderColor: "transparent",
-                borderWidth: 0,
+                //borderWidth: 0,
                 borderRadius: 30,
-                width: 40,
-                height: 40,
+                width: 50,
+                height: 50,
               }}
               containerStyle={{
                 width: 200,
-                position: "absolute",
-                bottom: 20,
                 padding: 0,
               }}
               onPress={() => router.push("/(scan)/camera")}
             />
-          </View>
+          </View> */}
         </View>
       </ThemeProvider>
     </SafeAreaProvider>
@@ -99,10 +121,19 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   view2: {
-    flex: 1,
-    marginLeft: "80%",
-    marginTop: "120%",
+    position: "absolute",
+    bottom: 80, // Make sure it's above the nav bar
+    left: "50%",
+    marginLeft: -25,
+    zIndex: 10, // Ensure it appears above other elements
   },
+  /* cameraButtonContainer: {
+    position: "absolute",
+    bottom: 60, // Adjust this value if needed
+    left: "50%",
+    marginLeft: -25, // Adjust to center the button
+    zIndex: 10,
+  }, */
   searchBar: {
     marginTop: 10,
   },
@@ -116,6 +147,6 @@ const styles = StyleSheet.create({
     margin: 40,
   },
   scrollView: {
-    height: "90",
+    flex: 1, 
   },
 });
