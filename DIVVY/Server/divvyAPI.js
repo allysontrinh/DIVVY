@@ -263,7 +263,7 @@ try {
 // Update a receipt
 app.put("/api/receipts/:receiptID", async (req, res) => {
   try {
-    const receipt = await Receipt.findOneAndUpdate({ receiptID: req.params.id }, req.body, { new: true });
+    const receipt = await Receipt.findOneAndUpdate({ receiptID: req.params.receiptID }, req.body, { new: true });
     if (!receipt) return res.status(404).json({ message: "Receipt not found" });
     res.status(200).json(receipt);
   } catch (err) {
