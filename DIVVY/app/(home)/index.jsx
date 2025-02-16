@@ -34,7 +34,7 @@ export default function HomeScreen() {
       <ThemeProvider theme={theme}>
         <View style={styles.container}>
           <SearchBar
-            placeholder=". . ."
+            placeholder="Search"
             onChangeText={setSearch}
             value={search}
             containerStyle={styles.searchBarContainer}
