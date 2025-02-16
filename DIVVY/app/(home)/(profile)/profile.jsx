@@ -119,7 +119,7 @@ export default function ProfileScreen() {
         </Modal>
       </View>
    
-
+    <View style={{ maxHeight: 420 }}>
       <ScrollView>
         {/* Inbox Section - Showing only events with status "in-progress" */}
       <View style={styles.section}>
@@ -156,6 +156,7 @@ export default function ProfileScreen() {
         </TouchableOpacity>
       </View>
       </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -198,7 +199,8 @@ const styles = StyleSheet.create({
   friendName: {
     fontSize: 20,
     textAlign: "left", // Centers the name inside the card
-    marginBottom: -5, // Space between the name and the bottom of the card
+    marginTop: -10,
+    marginBottom: 20, // Space between the name and the bottom of the card
     color: theme.colors.text,
   },
   buttonWrapper: {
@@ -244,30 +246,35 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    color: theme.colors,
+    color: theme.colors.text,
     fontSize: 16,
   },
   section: {
-    marginTop: 10,
-    padding: 16,
+    marginTop: 5,
+    padding: 20,
     backgroundColor: "white",
-    marginBottom: 10,
+    marginBottom: 1,
+    marginLeft: 10,
+    marginRight: 10,
+    borderRadius: 10,
+    height: 200,
   },
   inboxTitle: {
     color: theme.colors.inboxColor,
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 5,
+    marginTop: 10
   },
   inProgressTitle: {
     color: theme.colors.progressColor,
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: "bold",
     marginBottom: 10,
   },
   completedTitle: {
     color: theme.colors.completeColor,
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: "bold",
     marginBottom: 10,
   },
