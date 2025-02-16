@@ -63,11 +63,11 @@ The API will be available at: `http://localhost:PORT`
 - Retrieves a single user by their `userID`.
 - **Response:** A JSON object containing the user's details.
 
-#### `PUT /api/users/:id`
+#### `PUT /api/users/:userID`
 - Updates a user’s details by their `userID`.
 - **Response:** The updated user object.
 
-#### `DELETE /api/users/:id`
+#### `DELETE /api/users/:userID`
 - Deletes a user by their `userID`.
 - **Response:**  
   ```json
