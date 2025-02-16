@@ -89,7 +89,7 @@ export default function HomeScreen() {
             containerStyle={styles.searchBarContainer}
             inputContainerStyle={styles.searchBarInput}
           />
-          <View style={{ maxHeight: 600 }}>
+          {/* <View style={{ maxHeight: 100 }}> */}
           <ScrollView style={styles.scrollView}>
             {friends.map((friend, index) => (
               <TouchableOpacity key={index} onPress={() => openModal(friend)}>
@@ -135,7 +135,7 @@ export default function HomeScreen() {
               </TouchableOpacity>
             ))}
           </ScrollView>
-          </View>
+          {/* </View> */}
             {/* Modal to show the user's JSON */}
           <Modal
             transparent={true}
@@ -210,6 +210,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    maxHeight: 585
   },
   loader: {
     flex: 1,
@@ -227,7 +228,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     width: "80%",
-    maxHeight: "80%",
     overflow: "scroll",
   },
   jsonText: {

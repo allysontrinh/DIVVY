@@ -119,7 +119,7 @@ export default function ProfileScreen() {
         </Modal>
       </View>
    
-    <View style={{ maxHeight: 420 }}>
+    <View style={{ maxHeight: 355 }}>
       <ScrollView>
         {/* Inbox Section - Showing only events with status "in-progress" */}
       <View style={styles.section}>
