@@ -1,3 +1,9 @@
+## 🚅 Quick Jump
+- [User Endpoints](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#user-endpoints)
+- [Ticket Endpoints](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#ticket-endpoints)
+- [Receipt Endpoints](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#receipt-endpoints)
+- [Deployment](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#-deployment)
+
 # DivvyAPI
 
 DivvyAPI is a backend API designed for managing users, tickets, and receipts for a receipt-sharing/splitting application.
@@ -63,6 +69,10 @@ The API will be available at: `http://localhost:PORT`
 - Retrieves a single user by their `userID`.
 - **Response:** A JSON object containing the user's details.
 
+#### `GET /api/users/friends/:userID`
+- Retrieves a single user's friend's by their `userID`.
+- **Response:** An array of JSON objects containing the friend's details.
+
 #### `PUT /api/users/:userID`
 - Updates a user’s details by their `userID`.
 - **Response:** The updated user object.
@@ -82,6 +92,10 @@ The API will be available at: `http://localhost:PORT`
 - Retrieves a list of all tickets.
 - **Response:** A JSON array containing all tickets.
 
+#### `PUT /api/tickets/:ticketID`
+- Updates a ticket’s details by it's `ticketID`.
+- **Response:** The updated ticket object.
+  
 #### `POST /api/tickets`
 - Creates a new ticket.
 - **Request Body:**  
@@ -108,6 +122,10 @@ The API will be available at: `http://localhost:PORT`
 - Retrieves a list of all receipts.
 - **Response:** A JSON array containing all receipts.
 
+#### `PUT /api/receipts/:receiptID`
+- Updates a receipts’s details by it's `receiptID`.
+- **Response:** The updated receipt object.
+  
 #### `POST /api/receipts`
 - Creates a new receipt.
 - **Request Body:**  
