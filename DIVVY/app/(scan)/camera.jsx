@@ -1,135 +1,115 @@
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
-import { useState, useRef } from "react";
-import { useRouter } from "expo-router";
-import {
-  Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from "react-native";
+/* Opens up device camera, allows users to retake image, and sends photo to Veryfi API and returns a JSON.
+ * JSON is parsed for "important" data, and that parsed JSON gets sent to receipt.jsx to be displayed in a new screen.
+*/
 
-export default function CameraScreen() {
-  const [permission, requestPermission] = useCameraPermissions();
-  const [photo, setPhoto] = useState(null);
-  const cameraRef = useRef(null); // Reference to CameraView
+
+import React, { useState } from 'react';
+import { Button, View, Text, Image, ScrollView } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
+
+// Client setup 
+// Keep these keys 
+const VERYFI_API_URL = 'https://api.veryfi.com/api/v8/partner/documents/';
+const CLIENT_ID = 'vrf04ztm0OPFKx0YhynfzpSKk5pPuXks5bh87oX';
+const CLIENT_SECRET = 'T0NelIyfjahP6MVVMILX8S2FPYL6gtfRnXDhV0l9PiLBUyo9Fijti2C1HFcGCTFUvi8HT0fgJJMJBboL70PmFiCeY5JGXl9KbHv6KkCT4AUGnaojWwBPldzDLOHc7pkn';
+const API_KEY = '04261745d020eb0b2f389479dba4ba0b';
+
+export default function Camera() {
+  const [image, setImage] = useState(null);
+  const [savedImageUri, setSavedImageUri] = useState(null);
+  const [veryfiResponse, setVeryfiResponse] = useState(null);
   const router = useRouter();
 
-  if (!permission) {
-    return <View />;
-  }
+  /***********************  camera + image handling *************************************************************/
+  const pickImage = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3], // Should probably change aspect ratio to not 4x3
+      quality: 1,
+    });
 
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.message}>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="Grant Permission" />
-      </View>
-    );
-  }
+    if (!result.canceled) {
+      const imageUri = result.assets[0].uri; 
+      setImage(imageUri); // Display the image
 
-  async function takePicture() {
-    if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync(); // Capture photo
-      setPhoto(photo.uri);
+      const savedUri = await saveImage(imageUri);
+      setSavedImageUri(savedUri);
+
+      // After saving, send the image to Veryfi
+      await sendToVeryfi(savedUri);
     }
-  }
+  };
 
-  /**
-   * photo ? code : code
-   * This component checks if photo is not null
-   * If it is not null, it shows the photo the user took
-   * If it is null, it'll show the camera + flip/take picture buttons
-   */
+  const saveImage = async (imageUri) => {
+    try {
+      const filename = imageUri.split('/').pop();
+      const destination = `${FileSystem.documentDirectory}${filename}`;
+
+      await FileSystem.moveAsync({
+        from: imageUri,
+        to: destination,
+      });
+
+      console.log('Image saved to:', destination);
+      return destination;
+    } catch (error) {
+      console.error('Error saving image:', error);
+    }
+  };
+
+  /********************************************** Veryfi API handling ******************************************************/
+  const sendToVeryfi = async (imageUri) => {
+    try {
+        const fileBase64 = await FileSystem.readAsStringAsync(imageUri, { encoding: FileSystem.EncodingType.Base64 });
+
+        const filename = imageUri.split('/').pop(); // Extract filename safely
+
+        const response = await axios.post(
+            VERYFI_API_URL,
+            {
+                file_data: fileBase64,
+                file_name: filename, // Use filename extracted from imageUri
+                categories: ['Grocery', 'Restaurant'],
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    // Client-Id and Authorization keys (keep these)
+                    'Client-Id': 'vrf04ztm0OPFKx0YhynfzpSKk5pPuXks5bh87oX',
+                    'Authorization': `apikey allysontrinh:04261745d020eb0b2f389479dba4ba0b`,
+                },
+            }
+        );
+
+        console.log('Veryfi Response:', response.data);
+        setVeryfiResponse(response.data);
+        
+        // Navigate to the receipt screen and pass the parsed data
+        router.replace({
+          pathname: '/receipt',
+          query: {
+            vendor_name: response.data.vendor_name || 'N/A',
+            total: response.data.total || 'N/A',
+            date: response.data.transaction_date || 'N/A',
+            tax: response.data.tax || 'N/A',
+            categories: response.data.categories ? response.data.categories.join(', ') : 'N/A',
+          }
+        });
+
+    } catch (error) {
+      console.error('Error sending to Veryfi:', error.response ? error.response.data : error.message);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      {photo ? (
-        <View style={styles.previewContainer}>
-          <Image source={{ uri: photo }} style={styles.preview} />
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setPhoto(null)}
-          >
-            <Text style={styles.text}>Retake</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <CameraView ref={cameraRef} style={styles.camera} facing={"back"}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.captureButton}
-              onPress={takePicture}
-            >
-              <Text style={styles.text}>📸</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => router.push("/")}
-            >
-              <Text style={styles.text}>Go back</Text>
-            </TouchableOpacity>
-          </View>
-        </CameraView>
-      )}
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Button title="Take a Photo" onPress={pickImage} />
+      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, marginTop: 10 }} />}
+      {savedImageUri && <Text>Saved at: {savedImageUri}</Text>}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  message: {
-    textAlign: "center",
-    paddingBottom: 10,
-  },
-  camera: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  buttonContainer: {
-    position: "absolute",
-    bottom: 30,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  backButton: {
-    position: "absolute",
-    backgroundColor: "#007AFF",
-    padding: 10,
-    borderRadius: 10,
-    marginLeft: 100,
-  },
-  button: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 10,
-    borderRadius: 50,
-  },
-  captureButton: {
-    backgroundColor: "white",
-    padding: 15,
-    borderRadius: 50,
-    borderWidth: 2,
-    borderColor: "black",
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
-  },
-  previewContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  preview: {
-    width: "100%",
-    height: "80%",
-  },
-});
