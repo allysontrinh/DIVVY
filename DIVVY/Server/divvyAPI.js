@@ -108,6 +108,18 @@ app.get("/api/users/userID/:userID", async (req, res) => {
   }
 });
 
+// Get a users friends by userID
+app.get("/api/users/friends/:userID", async (req, res) => {
+  try {
+    const user = await User.findOne({ userID: req.params.userID }); // Use userID instead of _id
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const friends = await user.friends.map(User.findOne);
+    res.status(200).json(friends);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Create a new user
 app.post("/api/users", async (req, res) => {
   try {
@@ -122,7 +134,7 @@ app.post("/api/users", async (req, res) => {
 // Update a user
 app.put("/api/users/:userID", async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate({ userID: req.params.id }, req.body, { new: true });
+    const user = await User.findOneAndUpdate({ userID: req.params.id }, req.body, { new: true });
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json(user);
   } catch (err) {
@@ -133,7 +145,7 @@ app.put("/api/users/:userID", async (req, res) => {
 // Delete a user
 app.delete("/api/users/:userID", async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete({ userID: req.params.id });
+    const user = await User.findOneAndDelete({ userID: req.params.id });
     if (!user) return res.status(404).json({ message: "User not found" });
     res.status(200).json({ message: "User deleted" });
   } catch (err) {
@@ -151,6 +163,7 @@ app.get("/api/tickets", async (req, res) => {
   }
 });
 
+// Get a single ticket by ticketID
 app.get("/api/tickets/ticketID/:ticketID", async (req, res) => {
   try {
     const ticket = await Ticket.findOne({ ticketID: req.params.ticketID }); 
@@ -158,6 +171,17 @@ app.get("/api/tickets/ticketID/:ticketID", async (req, res) => {
     res.status(200).json(receipts);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+// Update a ticket
+app.put("/api/tickets/:ticketID", async (req, res) => {
+  try {
+    const ticket = await Ticket.findOneAndUpdate({ ticketID: req.params.id }, req.body, { new: true });
+    if (!ticket) return res.status(404).json({ message: "Receipt not found" });
+    res.status(200).json(ticket);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -191,6 +215,17 @@ try {
 } catch (err) {
   res.status(500).json({ message: err.message });
 }
+});
+
+// Update a receipt
+app.put("/api/receipts/:receiptID", async (req, res) => {
+  try {
+    const receipt = await Receipt.findOneAndUpdate({ receiptID: req.params.id }, req.body, { new: true });
+    if (!receipt) return res.status(404).json({ message: "Receipt not found" });
+    res.status(200).json(receipt);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 // Create a new receipt
