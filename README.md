@@ -1,3 +1,8 @@
+## 🚅 Quick Jump to API Endpoints
+- [User Endpoints](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#user-endpoints)
+- [Ticket Endpoints](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#ticket-endpoints)
+- [Receipt Endpoints](https://github.com/allysontrinh/DIVVY/blob/Carey/README.md#receipt-endpoints)
+
 # DivvyAPI
 
 DivvyAPI is a backend API designed for managing users, tickets, and receipts for a receipt-sharing/splitting application.
@@ -8,10 +13,6 @@ DivvyAPI is a backend API designed for managing users, tickets, and receipts for
 - Receipt management (Create, Read)
 - Built using **Node.js**, **Express.js**, and **MongoDB**
 
-## Quick Jump to API Endpoints
-- [User Endpoints]()
-- [Ticket Endpoints]()
-- [Receipt Endpoints]()
 ---
 
 ## 🛠 Setup & Installation
