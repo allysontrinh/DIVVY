@@ -154,25 +154,18 @@ app.put("/api/users/:userID", async (req, res) => {
 // Update user's events to include a new participating event
 app.put("/api/users/events/:userID", async (req, res) => {
   try {
-    const { events } = req.body; // Destructure the incoming event data
-    const user = await User.findOne({ userID: req.params.userID });
-
+    const user = await User.findOneAndUpdate(
+      { userID: req.params.userID },
+      { $push: { 'events.participating': ...req.body.events.participating } }, // Add to the participating array
+      { new: true }
+    );
     if (!user) return res.status(404).json({ message: "User not found" });
-
-    // Check if the event already exists in the participating array
-    events.participating.forEach(event => {
-      const existingEvent = user.events.some(e => e.eventID === event.eventID && e.receiptID === event.receiptID);
-      if (!existingEvent) {
-        user.events.push(event); // Add the event if it doesn't exist
-      }
-    });
-
-    await user.save(); // Save the updated user
-    res.status(200).json(user); // Return the updated user
+    res.status(200).json(user);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: "Error updating user events: " + err.message });
   }
 });
+
 
 // Delete a user
 app.delete("/api/users/:userID", async (req, res) => {
@@ -263,11 +256,15 @@ try {
 // Update a receipt
 app.put("/api/receipts/:receiptID", async (req, res) => {
   try {
-    const receipt = await Receipt.findOneAndUpdate({ receiptID: req.params.receiptID }, req.body, { new: true });
+    const receipt = await Receipt.findOneAndUpdate(
+      { receiptID: req.params.receiptID }, 
+      { $push: { users: req.body.friendID } }, // Add to the users array
+      { new: true }
+    );
     if (!receipt) return res.status(404).json({ message: "Receipt not found" });
     res.status(200).json(receipt);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(500).json({ message: "Error updating receipt: " + err.message });
   }
 });
 
