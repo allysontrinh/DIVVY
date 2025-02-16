@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
+import { Card } from "@rneui/themed";
 import { Avatar, Button } from "react-native-elements";
 import { Dimensions } from "react-native";
 import { useRouter } from "expo-router";
@@ -65,7 +67,6 @@ export default function ProfileScreen() {
           onPress={displayFriends}
         />
         <Modal
-          animationType="slide"
           transparent={true}
           visible={isModalVisible}
           onRequestClose={() => setIsModalVisible(false)}
@@ -76,13 +77,38 @@ export default function ProfileScreen() {
                 <ActivityIndicator size="large" color="blue" />
               ) : (
                 <>
+                <Text style={styles.friendsTitle}>Friends</Text>
+                <View style={styles.friendsList}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}>
                   {friends.map((friend, index) => (
-                    <Text>{friend.name}</Text>
+                    <View key={index} style={styles.cardWrapper}>
+                      <Card containerStyle={[
+                          styles.card,
+                          { 
+                            borderWidth: 0, 
+                            borderColor: 'transparent', 
+                            shadowOpacity: 0, 
+                            shadowRadius: 0, 
+                            elevation: 0,
+                            backgroundColor: 'white' // Ensure there's no background shadow effect
+                          }
+                        ]}>
+                        <Text style={styles.friendName}>👤 {friend.name}</Text>
+                      </Card>
+                      <View style={styles.horizontalLine} />
+                    </View>
                   ))}
-                  <Button
-                    title="Close"
-                    onPress={() => setIsModalVisible(false)}
-                  />
+                  
+                </ScrollView>
+                <View style={styles.buttonWrapper}>
+                    <Button
+                      title="Close"
+                      onPress={() => setIsModalVisible(false)}
+                      buttonStyle={styles.closeButton}
+                      titleStyle={styles.closeButtonText}
+                    />
+                  </View>
+                </View>
                 </>
               )}
             </View>
@@ -137,8 +163,50 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
-    width: "80%",
+    width: 350,
+    height: 700,
+    justifyContent: "space-between",
     alignItems: "center",
+  },
+  card: {
+    width: 290, // Adjust width to fit the screen or the design
+    height: 50,
+    marginBottom: 0, // Space between cards
+  },
+  horizontalLine: {
+    width: 280, // Makes the line span the full width of the container
+    height: 1.25, // Line thickness
+    backgroundColor: "#D3D3D3", // Line color, can change to any color
+    marginTop: 0, // Space between the card and the line
+    marginLeft: 20,
+  },
+  friendsTitle: {
+    fontSize: 36,
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginTop: 5,
+    color: theme.colors.text,
+  },
+  friendName: {
+    fontSize: 20,
+    textAlign: "left", // Centers the name inside the card
+    marginBottom: -5, // Space between the name and the bottom of the card
+    color: theme.colors.text,
+  },
+  buttonWrapper: {
+    padding: 50,
+    width: '100%', // Ensures the button takes the full width
+    alignItems: 'center', // Centers the button horizontally
+  },
+  closeButton: {
+    backgroundColor: theme.colors.primary,
+    padding: 10,
+    borderRadius: 5,
+    width: 280,
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 16,
   },
   userName: {
     flexDirection: "row",
@@ -168,12 +236,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: "#007bff",
+    backgroundColor: theme.colors.surface,
     padding: 10,
     borderRadius: 5,
   },
   buttonText: {
-    color: "white",
+    color: theme.colors,
     fontSize: 16,
   },
   section: {

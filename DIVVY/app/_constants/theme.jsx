@@ -4,7 +4,7 @@ const theme = {
     secondary: "#0056b3",
     background: "#f4f4f4",
     surface: "#ffffff",
-    text: "#000000",
+    text: "#343336",
     inboxColor: "#A7C7E7",
     progressColor: "#FAC898",
     completeColor: "#77DD77"
