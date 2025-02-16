@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require("cors");
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
@@ -15,6 +16,7 @@ mongoose.connect(uri)
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Middleware
+app.use(cors());
 app.use(bodyParser.json());
 
 // Define Mongoose Schemas
