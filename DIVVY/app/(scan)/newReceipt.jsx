@@ -31,7 +31,7 @@ export default function newReceiptScreen({ veryfiData }) {
           );
         })}
       </ScrollView>
-
+      <Button title="Add Friends"></Button>
       <Button title="Go Back Home" onPress={() => router.push("/")} />
     </View>
   );

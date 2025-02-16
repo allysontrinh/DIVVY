@@ -1,49 +1,24 @@
-import { React, useState, useEffect } from "react";
-import { ActivityIndicator, FlatList } from "react-native";
-import { ThemeProvider, Button } from "react-native-elements";
+import { fetchPosts } from "../_utils/getFriends"; // Import function
+import { useState, useEffect } from "react";
 import {
-  ScrollView,
+  ActivityIndicator,
   View,
+  ScrollView,
   Text,
-  TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { useRouter } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ThemeProvider } from "react-native-elements";
 import { SearchBar, Card } from "@rneui/themed";
-import axios from "axios";
 import theme from "../_constants/theme";
 
 export default function HomeScreen() {
-  const router = useRouter();
   const [search, setSearch] = useState("");
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchPosts = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        "https://divvy-8y34.onrender.com/api/users/friends/3"
-      );
-      setFriends(response.data); // Update state with API data
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-    } finally {
-      setLoading(false); // Hide loader after fetch
-    }
-  };
-
   useEffect(() => {
-    fetchPosts(); // Fetch posts when component mounts
-    // Set interval to re-fetch data every 5 seconds (5000ms)
-    // const intervalId = setInterval(() => {
-    //   fetchPosts();
-    // }, 5000);
-
-    // // Cleanup interval on component unmount
-    // return () => clearInterval(intervalId);
+    fetchPosts(setFriends, setLoading); // Call the reusable function
   }, []);
 
   if (loading) {
@@ -53,33 +28,26 @@ export default function HomeScreen() {
       </View>
     );
   }
+
   return (
     <SafeAreaProvider>
       <ThemeProvider theme={theme}>
         <View style={styles.container}>
-          <View>
-            <SearchBar
-              placeholder=". . ."
-              onChangeText={(search) => {
-                setSearch(search);
-              }}
-              value={search}
-              containerStyle={styles.searchBarContainer}
-              inputContainerStyle={styles.searchBarInput}
-            />
-          </View>
+          <SearchBar
+            placeholder=". . ."
+            onChangeText={setSearch}
+            value={search}
+            containerStyle={styles.searchBarContainer}
+            inputContainerStyle={styles.searchBarInput}
+          />
           <ScrollView style={styles.scrollView}>
-          {friends.map((friend, index) => {
-            return (
-              <Card style={styles.postCard}>
+            {friends.map((friend, index) => (
+              <Card key={index}>
                 <Card.Title>{friend.name}</Card.Title>
                 <Card.Divider />
-                <Text>
-                  Spent: $100
-                </Text>
+                <Text>Spent: $100</Text>
               </Card>
-            );
-          })}
+            ))}
           </ScrollView>
         </View>
       </ThemeProvider>
@@ -101,12 +69,11 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   searchBarContainer: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.primary,
     padding: 40,
     marginTop: 10,
     marginBottom: -10,
-    borderBottomColor: 0,
-    borderTopColor: 0,
+    border: "none",
   },
   searchBarInput: {
     borderRadius: 30,
