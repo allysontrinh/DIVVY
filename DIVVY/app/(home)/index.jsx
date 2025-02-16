@@ -66,15 +66,14 @@ const styles = StyleSheet.create({
   searchBarWrapper: {
     width: "90%",
     alignSelf: "center",
-    marginTop: 20,
     zIndex: 2,
   },
   searchBarContainer: {
     backgroundColor: theme.colors.primary,
     padding: 40,
-    marginTop: 10,
+    marginTop: 0,
     marginBottom: 10,
-    border: "none",
+    borderBottomColor: "transparent",
   },
   searchBarInput: {
     borderRadius: 30,
